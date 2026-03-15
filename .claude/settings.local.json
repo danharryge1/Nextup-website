@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tail:*)",
+      "Bash(head:*)",
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(curl:*)",
+      "Bash(test:*)",
+      "Bash(cd:*)",
+      "Bash(grep:*)",
+      "Bash(grep :\\(3000|3001|3002|3003\\) :*)",
+      "Bash(grep node:*)",
+      "Bash(lsof:*)",
+      "Bash(ls:*)",
+      "Bash(npx next:*)",
+      "Bash(kill 60032:*)",
+      "Bash(pkill:*)",
+      "Bash(echo killed:*)",
+      "Bash(echo ffprobe not available:*)",
+      "Bash(mdls:*)"
+    ]
+  }
+}
