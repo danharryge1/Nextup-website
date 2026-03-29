@@ -20,7 +20,7 @@ const directionMap = {
 
 /**
  * Scroll-driven reveal using Framer Motion's whileInView.
- * Reliable in Next.js App Router — no async GSAP loading needed.
+ * Reliable in Next.js App Router - no async GSAP loading needed.
  */
 export default function ScrollReveal({
   children,

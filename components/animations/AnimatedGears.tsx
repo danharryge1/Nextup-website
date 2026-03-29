@@ -8,7 +8,7 @@ export default function AnimatedGears() {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      {/* Large gear (left) — rotates CW */}
+      {/* Large gear (left) - rotates CW */}
       <g style={{ transformOrigin: '30px 40px', animation: 'slow-rotate 6s linear infinite' }}>
         <circle cx="30" cy="40" r="14" stroke="var(--accent-coral)" strokeWidth="2" />
         <circle cx="30" cy="40" r="5" stroke="var(--accent-coral)" strokeWidth="1.5" />
@@ -23,7 +23,7 @@ export default function AnimatedGears() {
         })}
       </g>
 
-      {/* Small gear (right) — rotates CCW */}
+      {/* Small gear (right) - rotates CCW */}
       <g style={{ transformOrigin: '55px 40px', animation: 'slow-rotate 4s linear infinite reverse' }}>
         <circle cx="55" cy="40" r="9" stroke="var(--accent-coral)" strokeWidth="2" opacity="0.7" />
         <circle cx="55" cy="40" r="3" stroke="var(--accent-coral)" strokeWidth="1.5" opacity="0.7" />

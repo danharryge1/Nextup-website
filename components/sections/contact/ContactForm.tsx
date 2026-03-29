@@ -35,7 +35,7 @@ export default function ContactForm() {
 
       <SectionLabel colour="blue">{CONTACT_FORM_LABEL}</SectionLabel>
 
-      {/* TODO: Wire up to Formspree — replace action="#" with https://formspree.io/f/YOUR_FORM_ID */}
+      {/* TODO: Wire up to Formspree - replace action="#" with https://formspree.io/f/YOUR_FORM_ID */}
       <form action="#" method="POST" className="mt-8 flex flex-col gap-4 max-w-2xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <motion.input

@@ -55,7 +55,7 @@ export default function ServiceBlock({ number, title, description, colour, bgSty
         }}
       />
 
-      {/* Background number — larger and more prominent */}
+      {/* Background number - larger and more prominent */}
       <motion.span
         className="absolute top-8 right-4 md:right-12 font-clash font-bold select-none pointer-events-none"
         style={{ opacity: 0, fontSize: 'clamp(8rem, 20vw, 14rem)', lineHeight: 1, color: ACCENT_COLOURS[colour] }}

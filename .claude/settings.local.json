@@ -18,7 +18,9 @@
       "Bash(pkill:*)",
       "Bash(echo killed:*)",
       "Bash(echo ffprobe not available:*)",
-      "Bash(mdls:*)"
+      "Bash(mdls:*)",
+      "Bash(LC_ALL=C find /Users/dangeorge/consultancy-website/app /Users/dangeorge/consultancy-website/components /Users/dangeorge/consultancy-website/lib -type f \\\\\\( -name \"*.ts\" -o -name \"*.tsx\" -o -name \"*.css\" \\\\\\))",
+      "Bash(xargs perl:*)"
     ]
   }
 }

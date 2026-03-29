@@ -26,7 +26,7 @@ export default function ContactPage() {
         style={{ minHeight: '50vh', paddingTop: '120px', paddingBottom: '80px' }}
         aria-label="Contact hero"
       >
-        {/* Gradient orb — coral dominant */}
+        {/* Gradient orb - coral dominant */}
         <div
           aria-hidden="true"
           style={{

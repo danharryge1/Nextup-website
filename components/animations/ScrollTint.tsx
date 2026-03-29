@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 /**
  * Fixed overlay that transitions a subtle accent-colour radial glow
  * as the user scrolls through sections: blue → teal → coral → amber.
- * Each tint fades in, peaks, then fades out — overlapping smoothly.
+ * Each tint fades in, peaks, then fades out - overlapping smoothly.
  */
 
 const TINTS = [

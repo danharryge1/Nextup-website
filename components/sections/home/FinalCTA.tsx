@@ -11,6 +11,7 @@ export default function FinalCTA() {
     <section
       className="relative z-10 overflow-hidden"
       style={{
+        isolation:     'isolate',
         background:    'var(--background-dark)',
         paddingTop:    'clamp(100px, 12vw, 160px)',
         paddingBottom: 'clamp(100px, 12vw, 160px)',

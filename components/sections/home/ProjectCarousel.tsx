@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Container from '@/components/ui/Container'
 import SectionLabel from '@/components/ui/SectionLabel'
@@ -208,7 +209,7 @@ export default function ProjectCarousel() {
                     transition:           'transform 0.6s cubic-bezier(0.4,0,0.2,1)',
                   } as React.CSSProperties}
                 >
-                  {/* Front face — tilt target */}
+                  {/* Front face - tilt target */}
                   <div
                     ref={el => { tiltRefs.current[i] = el }}
                     style={{
@@ -240,16 +241,41 @@ export default function ProjectCarousel() {
                           background: `radial-gradient(ellipse 80% 50% at 50% 0%, rgba(${rgb},0.10), transparent)`,
                         }}
                       />
-                      <span
-                        className="font-clash font-bold text-center px-4 relative z-10"
-                        style={{ fontSize: '1.8rem', lineHeight: 1.1, color: '#ffffff' }}
-                      >
-                        {project.name}
-                      </span>
-                      <div
-                        className="mt-3 relative z-10"
-                        style={{ width: 40, height: 2, background: hex, borderRadius: 2 }}
-                      />
+                      {project.logo ? (
+                        <>
+                          <div
+                            className="relative z-10"
+                            style={{ width: '80%', height: '60%' }}
+                          >
+                            <Image
+                              src={project.logo}
+                              alt={project.name}
+                              fill
+                              className="object-contain"
+                              sizes="192px"
+                            />
+                          </div>
+                          <span
+                            className="font-clash text-center px-4 relative z-10 mt-3"
+                            style={{ fontSize: '1rem', fontWeight: 500, color: 'rgba(255,255,255,0.75)' }}
+                          >
+                            {project.name}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span
+                            className="font-clash font-bold text-center px-4 relative z-10"
+                            style={{ fontSize: '1.8rem', lineHeight: 1.1, color: '#ffffff' }}
+                          >
+                            {project.name}
+                          </span>
+                          <div
+                            className="mt-3 relative z-10"
+                            style={{ width: 40, height: 2, background: hex, borderRadius: 2 }}
+                          />
+                        </>
+                      )}
                     </div>
 
                     {/* Mouse-following glow overlay */}

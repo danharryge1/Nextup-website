@@ -4,6 +4,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import PageTransition from '@/components/animations/PageTransition'
 import LoadingScreen from '@/components/animations/LoadingScreen'
+import AuroraAnimation from '@/components/animations/AuroraAnimation'
 import { COMPANY_NAME } from '@/lib/constants'
 
 export const metadata: Metadata = {
@@ -29,15 +30,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap" />
       </head>
       <body>
-        {/* Synchronous script — runs before first paint. Hides body for first-time
+        {/* Synchronous script - runs before first paint. Hides body for first-time
             visitors so page content never flashes before the intro overlay appears. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(!sessionStorage.getItem('intro-seen')){var s=document.createElement('style');s.id='intro-blocker';s.textContent='body{visibility:hidden}';document.head.appendChild(s)}}catch(e){}})()`,
+            __html: `(function(){var s=document.createElement('style');s.id='intro-blocker';s.textContent='body{visibility:hidden}';document.head.appendChild(s)})()`,
           }}
         />
         <LoadingScreen />
-        <div className="flex flex-col min-h-screen">
+        <AuroraAnimation />
+        <div className="flex flex-col min-h-screen relative z-10">
           <Navbar />
           <main className="flex-1">
             <PageTransition>{children}</PageTransition>

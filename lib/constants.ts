@@ -2,7 +2,7 @@ export const COMPANY_NAME = "Next Up Co.";
 export const COMPANY_EMAIL = "book.next.up@gmail.com";
 export const BOOKING_LINK = "https://calendly.com/book-next-up";
 export const COMPANY_LOCATION = "Liverpool, UK";
-export const LINKEDIN_URL = "#"; // UPDATE WHEN READY
+export const LINKEDIN_URL = "https://www.linkedin.com/in/daniel-h-george/";
 
 // NAV
 export const NAV_LINKS = [
@@ -57,45 +57,52 @@ export type AccentColour = "blue" | "teal" | "coral" | "amber";
 export const PROJECTS = [
   {
     name: "Spark",
-    description: "Partnered with a youth employment hub in Birkenhead to tackle youth unemployment. Delivered a strategic plan to reduce the area's 6,000 NEETs on a 10k budget.",
+    description: "Youth employment innovation, Liverpool. Partnered with a youth employment hub in Birkenhead to tackle youth unemployment. Delivered a strategic plan to reduce the area's 6,000 NEETs on a £10k budget.",
     category: "Strategy",
     colour: "blue" as const,
+    logo: "/images/Logos/spark.png",
   },
   {
     name: "Marden Digital",
     description: "Solo web designer being bottlenecked by slow client content. We built a system that cut content turnaround time so he could take on more builds and scale revenue.",
     category: "Operations",
     colour: "teal" as const,
+    logo: "/images/Logos/Marden Digital.jpeg",
   },
   {
     name: "Student Showdown Boxing",
     description: "Boxing and MMA events company needing support across two fight nights. We managed fighters, planned the event schedule, and helped execute on the night.",
     category: "Events",
     colour: "coral" as const,
+    logo: "/images/Logos/student-showdown.webp",
   },
   {
     name: "RBC Events",
     description: "Boxing events company that needed credible, innovative marketing to stand out in a competitive market. We built the brand, managed operations including boxer management and event planning, and sold out to 500+ viewers in 8 weeks.",
     category: "Events",
     colour: "amber" as const,
+    logo: "/images/Logos/rbc events.avif",
   },
   {
     name: "Africa Oye",
     description: "Consulted for the UK's biggest African music festival on innovative marketing strategies to attract international and local students, while managing the transition from a free to a paid event. Delivered two actionable marketing approaches and a contact list for further support.",
     category: "Marketing",
     colour: "blue" as const,
+    logo: "/images/Logos/africa oye.webp",
   },
   {
     name: "Castel Clothing",
     description: "Personal shopper stuck at a revenue ceiling, trapped in a market category limiting growth. We built a clear, executable strategy to reposition upmarket and attract higher-quality clients.",
     category: "Brand",
     colour: "teal" as const,
+    logo: "/images/Logos/Castel clothing.webp",
   },
   {
     name: "Soar the Project",
     description: "Clothing brand with 15k+ followers looking to break into the UK market. We're building their customer strategy, marketing approach, and a sustainable shipping model to launch UK sales.",
     category: "Marketing",
     colour: "coral" as const,
+    logo: "/images/Logos/soar the project.png",
   },
   {
     name: "Donna",
@@ -108,6 +115,7 @@ export const PROJECTS = [
     description: "Details coming soon.",
     category: "TBC",
     colour: "coral" as const,
+    logo: "/images/Logos/regnerus.jpg",
   },
 ];
 
@@ -139,10 +147,10 @@ export const PROCESS_STEPS = [
 export const TEAM_HEADING = "The Team";
 export const TEAM_TAGLINE = "No handoffs. No juniors. The people on this page are the people doing the work.";
 export const TEAM_MEMBERS = [
-  { name: "Dan", role: "Co-Founder", image: "/images/team/dan.jpg" },
-  { name: "Joe", role: "Co-Founder", image: "/images/team/joe.jpg" },
-  { name: "Charlie", role: "Co-Founder", image: "/images/team/charlie.jpg" },
-  { name: "Liam", role: "Co-Founder", image: "/images/team/liam.jpg" },
+  { name: "Dan", role: "Co-Founder", image: "/images/team/Dan.jpg", linkedin: "https://www.linkedin.com/in/daniel-h-george/" },
+  { name: "Joe", role: "Co-Founder", image: "/images/team/Joe.jpg", linkedin: "https://www.linkedin.com/in/joseph-tipping-298193327/" },
+  { name: "Charlie", role: "Co-Founder", image: "/images/team/Charlie.jpg", linkedin: "https://www.linkedin.com/in/charlie-waugh-339069201/" },
+  { name: "Liam", role: "Co-Founder", image: "/images/team/Liam.jpg", linkedin: "https://www.linkedin.com/in/liam-sawley-703013211/" },
 ];
 
 // HOME - FINAL CTA
@@ -163,26 +171,46 @@ export const ABOUT_TEAM_BIOS = [
   {
     name: "Dan",
     role: "Co-Founder",
-    bio: "Bio coming soon.",
-    image: "/images/team/dan.jpg",
+    bio: [
+      "Keeps things moving every single day. Holds the team accountable, pushes decisions forward, and brings a sharp edge with AI and modern tech.",
+      "Built and sold out a boxing events company to 500+ people, ran a dropshipping business, and invests on the side.",
+      "Gym, painting, travelling, and currently trying to learn the guitar.",
+    ],
+    image: "/images/team/Dan.jpg",
+    linkedin: "https://www.linkedin.com/in/daniel-h-george/",
   },
   {
     name: "Joe",
     role: "Co-Founder",
-    bio: "Bio coming soon.",
-    image: "/images/team/joe.jpg",
+    bio: [
+      "Brings ambition and positivity to the team. Always pushing the vision forward and finding ways to improve, learn, and innovate.",
+      "Director and co-lead of marketing for an events company that sold out its venue, then Head of Marketing for a healthcare startup.",
+      "Gym, travelling, and experiencing new cultures and perspectives.",
+    ],
+    image: "/images/team/Joe.jpg",
+    linkedin: "https://www.linkedin.com/in/joseph-tipping-298193327/",
   },
   {
     name: "Charlie",
     role: "Co-Founder",
-    bio: "Bio coming soon.",
-    image: "/images/team/charlie.jpg",
+    bio: [
+      "The organiser and connector of the team. Makes sure people stay aligned and that clients receive the work we deliver.",
+      "Built a social media audience of over 125,000 followers, ran e-commerce sales across 18+ countries, and led Student Showdown - a sold-out event with over 600 tickets sold.",
+      "Travelled to 40 countries, which has helped develop strong people skills and the ability to connect with different cultures.",
+    ],
+    image: "/images/team/Charlie.jpg",
+    linkedin: "https://www.linkedin.com/in/charlie-waugh-339069201/",
   },
   {
     name: "Liam",
     role: "Co-Founder",
-    bio: "Bio coming soon.",
-    image: "/images/team/liam.jpg",
+    bio: [
+      "The one who stress-tests ideas before they go through to clients for implementation.",
+      "Ran a property investment business for 4 years and co-founded a student boxing events company.",
+      "Enjoys reading fiction and keeping active in the gym.",
+    ],
+    image: "/images/team/Liam.jpg",
+    linkedin: "https://www.linkedin.com/in/liam-sawley-703013211/",
   },
 ];
 

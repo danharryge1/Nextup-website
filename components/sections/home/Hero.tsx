@@ -53,7 +53,7 @@ export default function Hero() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ minHeight: 'max(100vh, 700px)' }}
+      style={{ minHeight: 'max(100vh, 700px)', background: '#0A0A0F' }}
       aria-label="Hero"
     >
       {/* Video background with parallax */}
@@ -78,7 +78,7 @@ export default function Hero() {
         >
           <source src="/videos/hero-bg.mp4" type="video/mp4" />
         </video>
-        {/* Gradient overlay — fades video into the section below */}
+        {/* Gradient overlay - fades video into the section below */}
         <div
           className="absolute bottom-0 left-0 right-0 h-48"
           style={{ background: 'linear-gradient(to top, #0A0A0F, transparent)' }}
@@ -135,7 +135,7 @@ export default function Hero() {
             </motion.p>
           </motion.div>
 
-          {/* CTA button — static (1x scroll speed) */}
+          {/* CTA button - static (1x scroll speed) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,7 +147,7 @@ export default function Hero() {
             </MagneticButton>
           </motion.div>
 
-          {/* Reassurance — static */}
+          {/* Reassurance - static */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

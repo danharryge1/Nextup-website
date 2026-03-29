@@ -35,9 +35,9 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" aria-label="Next Up Co. - Home" className="flex-shrink-0">
             <img
-              src="/images/Logo.svg"
+              src="/images/logo-with-name.svg"
               alt="Next Up Co."
-              style={{ height: 40, width: 'auto' }}
+              style={{ height: 147, width: 'auto' }}
             />
           </Link>
 

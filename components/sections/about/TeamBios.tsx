@@ -1,7 +1,8 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { User } from 'lucide-react'
+import { User, Linkedin } from 'lucide-react'
 import Container from '@/components/ui/Container'
 import SectionLabel from '@/components/ui/SectionLabel'
 import { TEAM_BIOS_LABEL, ABOUT_TEAM_BIOS } from '@/lib/constants'
@@ -44,15 +45,48 @@ export default function TeamBios() {
 
                 <div className={`flex flex-col ${isEven ? 'md:flex-row-reverse' : 'md:flex-row'} gap-8 md:gap-12 items-center`}>
                   {/* Photo */}
-                  <div className="flex-shrink-0 w-full max-w-[280px] md:w-[320px] lg:w-[400px] aspect-square rounded-xl bg-[var(--background)] border border-[var(--border)] flex items-center justify-center">
-                    <User size={64} className="text-[var(--foreground-faint)]" />
+                  <div className="flex-shrink-0 w-full max-w-[280px] md:w-[320px] lg:w-[400px] aspect-square rounded-xl bg-[var(--background)] border border-[var(--border)] overflow-hidden relative">
+                    {member.image ? (
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 280px, 400px"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <User size={64} className="text-[var(--foreground-faint)]" />
+                      </div>
+                    )}
                   </div>
 
                   {/* Text */}
                   <div className="flex-1">
-                    <h3 className="sub-heading font-clash mb-1">{member.name}</h3>
-                    <p className="text-sm font-satoshi text-[var(--foreground-muted)] mb-4">{member.role}</p>
-                    <p className="text-[var(--foreground)] text-base leading-relaxed">{member.bio}</p>
+                    <div className="flex items-center gap-3 mb-1">
+                      <h3 className="sub-heading font-clash">{member.name}</h3>
+                      {member.linkedin && (
+                        <a
+                          href={member.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${member.name} on LinkedIn`}
+                          className="text-[var(--accent-blue)] hover:text-[var(--accent-teal)] transition-colors duration-200"
+                        >
+                          <Linkedin size={18} />
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-sm font-satoshi text-[var(--foreground-muted)] mb-5">{member.role}</p>
+                    <div className="flex flex-col gap-3">
+                      {Array.isArray(member.bio) ? (
+                        member.bio.map((line, j) => (
+                          <p key={j} className="text-[var(--foreground)] text-base leading-relaxed">{line}</p>
+                        ))
+                      ) : (
+                        <p className="text-[var(--foreground)] text-base leading-relaxed">{member.bio}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </motion.div>

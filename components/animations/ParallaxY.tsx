@@ -11,7 +11,7 @@ interface Props {
 
 /**
  * Wraps children with a GSAP ScrollTrigger scrub that drifts the element
- * upward slightly as it scrolls through the viewport — creating parallax depth.
+ * upward slightly as it scrolls through the viewport - creating parallax depth.
  */
 export default function ParallaxY({ children, speed = 0.12, className }: Props) {
   const ref = useRef<HTMLDivElement>(null)

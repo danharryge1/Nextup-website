@@ -6,8 +6,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #0A0A0F;
-  --background-alt: #0F0F17;
+  --background: rgba(10, 10, 15, 0.78);
+  --background-alt: rgba(15, 15, 23, 0.76);
   --background-dark: #070710;
   --foreground: #E8E8ED;
   --foreground-muted: #8B8B9E;
@@ -15,7 +15,7 @@
   --foreground-on-dark: #E8E8ED;
   --border: #1E1E2E;
   --border-dark: #2A2A3A;
-  --card: #14141F;
+  --card: rgba(20, 20, 31, 0.88);
 
   --accent-blue: #2563EB;
   --accent-blue-hover: #1D4ED8;
@@ -40,7 +40,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
+  background: #0A0A0F;
   color: var(--foreground);
   font-family: 'Satoshi', system-ui, -apple-system, sans-serif;
   font-size: 1.125rem;
@@ -243,7 +243,7 @@ h1, h2, h3, h4, h5, h6 {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   border-radius: 20px;
-  /* No overflow:hidden here — it breaks backface-visibility in some browsers */
+  /* No overflow:hidden here - it breaks backface-visibility in some browsers */
 }
 .card-face-inner {
   position: absolute;

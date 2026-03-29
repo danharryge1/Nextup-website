@@ -1,7 +1,8 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { User } from 'lucide-react'
+import { User, Linkedin } from 'lucide-react'
 import Container from '@/components/ui/Container'
 import SectionLabel from '@/components/ui/SectionLabel'
 import Button from '@/components/ui/Button'
@@ -48,11 +49,36 @@ export default function TeamTeaser() {
               variants={cardVariants}
               className="flex flex-col items-center gap-3"
             >
-              <div className="w-full aspect-square rounded-xl bg-[var(--background-alt)] flex items-center justify-center border border-[var(--border)] transition-all duration-300 hover:scale-[1.04] hover:brightness-105 cursor-pointer">
-                <User size={40} className="text-[var(--foreground-faint)]" />
+              <div className="w-full aspect-square rounded-xl bg-[var(--background-alt)] border border-[var(--border)] overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:brightness-105 cursor-pointer relative">
+                {member.image ? (
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <User size={40} className="text-[var(--foreground-faint)]" />
+                  </div>
+                )}
               </div>
               <div className="text-center">
-                <h3 className="font-clash font-semibold text-lg leading-tight">{member.name}</h3>
+                <div className="flex items-center justify-center gap-2">
+                  <h3 className="font-clash font-semibold text-lg leading-tight">{member.name}</h3>
+                  {member.linkedin && (
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${member.name} on LinkedIn`}
+                      className="text-[var(--accent-blue)] hover:text-[var(--accent-teal)] transition-colors duration-200"
+                    >
+                      <Linkedin size={16} />
+                    </a>
+                  )}
+                </div>
                 <p className="font-satoshi text-sm text-[var(--foreground-muted)] mt-0.5">{member.role}</p>
               </div>
             </motion.div>

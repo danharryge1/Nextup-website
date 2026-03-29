@@ -35,19 +35,19 @@ export default function ProcessDiagram() {
         </marker>
       </defs>
 
-      {/* ── Circle 1 — Understand (blue) ── */}
+      {/* ── Circle 1 - Understand (blue) ── */}
       <circle cx="85"  cy="85"  r="40" stroke="#2563EB" strokeWidth="3"
         style={{ animation: 'pdPulse 6s ease-in-out infinite', animationDelay: '0s' }} />
       <text x="85" y="93" textAnchor="middle" fontSize="15" fill="url(#pdGrad01)"
         fontFamily="'Clash Display', sans-serif" fontWeight="700">01</text>
 
-      {/* ── Circle 2 — Design (teal) ── */}
+      {/* ── Circle 2 - Design (teal) ── */}
       <circle cx="215" cy="85"  r="40" stroke="#0D9488" strokeWidth="3"
         style={{ animation: 'pdPulse 6s ease-in-out infinite', animationDelay: '2s' }} />
       <text x="215" y="93" textAnchor="middle" fontSize="15" fill="url(#pdGrad02)"
         fontFamily="'Clash Display', sans-serif" fontWeight="700">02</text>
 
-      {/* ── Circle 3 — Deliver (coral) ── */}
+      {/* ── Circle 3 - Deliver (coral) ── */}
       <circle cx="150" cy="215" r="40" stroke="#F43F5E" strokeWidth="3"
         style={{ animation: 'pdPulse 6s ease-in-out infinite', animationDelay: '4s' }} />
       <text x="150" y="223" textAnchor="middle" fontSize="15" fill="url(#pdGrad03)"

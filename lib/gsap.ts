@@ -1,5 +1,5 @@
 /**
- * Dynamic GSAP loader — keeps GSAP out of the main bundle.
+ * Dynamic GSAP loader - keeps GSAP out of the main bundle.
  * Usage: const { gsap, ScrollTrigger } = await loadGSAP()
  */
 export async function loadGSAP() {

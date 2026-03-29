@@ -19,9 +19,9 @@ export default function Footer() {
           <div className="flex flex-col gap-3">
             <Link href="/" aria-label={`${COMPANY_NAME} - Home`}>
               <img
-                src="/images/Logo.svg"
+                src="/images/logo-with-name.svg"
                 alt={COMPANY_NAME}
-                style={{ height: 36, width: 'auto' }}
+                style={{ height: 136, width: 'auto' }}
               />
             </Link>
             <p className="text-sm text-white/50 leading-relaxed max-w-[220px]">
@@ -59,11 +59,13 @@ export default function Footer() {
             </div>
             <a
               href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm text-white/50 hover:text-accent-teal transition-colors duration-200 mt-1"
-              aria-label="LinkedIn"
+              aria-label="Find us on LinkedIn"
             >
               <Linkedin size={14} />
-              LinkedIn
+              Find us on LinkedIn
             </a>
           </div>
         </div>

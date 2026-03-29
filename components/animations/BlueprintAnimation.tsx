@@ -4,17 +4,17 @@ import { useEffect, useRef } from 'react'
 
 // ── Node positions [x, y] in a 0-100 × 0-100 SVG viewBox ──────────────────
 const NODES: [number, number][] = [
-  // Row 1 (y 6-14) — 7 nodes
+  // Row 1 (y 6-14) - 7 nodes
   [5, 8],   [18, 6],  [33, 12], [50, 7],  [66, 11], [82, 6],  [95, 10],  // 0-6
-  // Row 2 (y 22-30) — 6 nodes
+  // Row 2 (y 22-30) - 6 nodes
   [11, 25], [27, 22], [43, 28], [58, 24], [74, 29], [90, 23],            // 7-12
-  // Row 3 (y 37-47) — 7 nodes
+  // Row 3 (y 37-47) - 7 nodes
   [4, 40],  [20, 37], [36, 44], [52, 39], [68, 45], [84, 40], [97, 43], // 13-19
-  // Row 4 (y 52-61) — 6 nodes
+  // Row 4 (y 52-61) - 6 nodes
   [9, 55],  [25, 52], [41, 58], [57, 53], [72, 60], [88, 54],            // 20-25
-  // Row 5 (y 67-76) — 7 nodes
+  // Row 5 (y 67-76) - 7 nodes
   [6, 70],  [22, 67], [39, 74], [55, 69], [71, 75], [87, 68], [98, 72], // 26-32
-  // Row 6 (y 83-91) — 6 nodes
+  // Row 6 (y 83-91) - 6 nodes
   [14, 85], [30, 88], [47, 83], [62, 90], [78, 84], [93, 89],            // 33-38
   // Interior density nodes
   [35, 33], [55, 47], [20, 48],                                           // 39-41
@@ -64,7 +64,7 @@ const COLOURS = [
   'rgba(13,148,136,0.12)',
 ]
 
-// Node rows — for zone pulse targeting
+// Node rows - for zone pulse targeting
 const ZONE_NODES = [
   [0, 1, 2, 3, 4, 5, 6],
   [7, 8, 9, 10, 11, 12],
@@ -227,7 +227,7 @@ export default function BlueprintAnimation() {
         preserveAspectRatio="none"
         style={{ position: 'absolute', inset: 0 }}
       >
-        {/* Lines — rendered in sorted desktop order so Map keys are consistent */}
+        {/* Lines - rendered in sorted desktop order so Map keys are consistent */}
         {SORTED_DESKTOP.map((conn) => (
           <line
             key={`l${conn.key}`}

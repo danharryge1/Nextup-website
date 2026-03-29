@@ -21,7 +21,7 @@ export default function ServicesHero() {
       style={{ minHeight: '60vh', paddingTop: '120px', paddingBottom: '80px' }}
       aria-label="Services hero"
     >
-      {/* Gradient orb — teal dominant */}
+      {/* Gradient orb - teal dominant */}
       <div
         aria-hidden="true"
         style={{

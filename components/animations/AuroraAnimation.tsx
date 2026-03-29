@@ -5,19 +5,19 @@ import { useEffect, useRef } from 'react'
 interface Band {
   r: number; g: number; b: number
   opacity: number
-  yBase: number   // 0-1 fraction of canvas height
-  bandW: number   // pixel height of band
-  speed: number   // time-scale multiplier
+  yBase: number
+  bandW: number
+  speed: number
   phase1: number
   phase2: number
 }
 
 const BANDS: Band[] = [
-  { r: 37,  g: 99,  b: 235, opacity: 0.30, yBase: 0.15, bandW: 150, speed: 0.08, phase1: 0.0,  phase2: 1.1 },
-  { r: 0,   g: 138, b: 160, opacity: 0.25, yBase: 0.25, bandW: 130, speed: 0.06, phase1: 2.1,  phase2: 0.4 },
-  { r: 0,   g: 171, b: 177, opacity: 0.22, yBase: 0.40, bandW: 110, speed: 0.07, phase1: 1.4,  phase2: 2.3 },
-  { r: 46,  g: 44,  b: 115, opacity: 0.28, yBase: 0.55, bandW: 140, speed: 0.05, phase1: 3.3,  phase2: 1.9 },
-  { r: 13,  g: 148, b: 136, opacity: 0.20, yBase: 0.35, bandW: 120, speed: 0.09, phase1: 0.9,  phase2: 3.1 },
+  { r: 37,  g: 99,  b: 235, opacity: 0.55, yBase: 0.15, bandW: 150, speed: 0.08, phase1: 0.0,  phase2: 1.1 },
+  { r: 0,   g: 138, b: 160, opacity: 0.50, yBase: 0.25, bandW: 130, speed: 0.06, phase1: 2.1,  phase2: 0.4 },
+  { r: 0,   g: 171, b: 177, opacity: 0.42, yBase: 0.40, bandW: 110, speed: 0.07, phase1: 1.4,  phase2: 2.3 },
+  { r: 46,  g: 44,  b: 115, opacity: 0.52, yBase: 0.55, bandW: 140, speed: 0.05, phase1: 3.3,  phase2: 1.9 },
+  { r: 13,  g: 148, b: 136, opacity: 0.40, yBase: 0.35, bandW: 120, speed: 0.09, phase1: 0.9,  phase2: 3.1 },
 ]
 
 function drawBand(
@@ -32,7 +32,6 @@ function drawBand(
   const sp    = band.speed * speedMult
 
   ctx.beginPath()
-  // Top edge — left to right
   for (let x = 0; x <= W; x += 3) {
     const topY = baseY
       + Math.sin(x * 0.003 + t * sp + band.phase1) * 40
@@ -40,7 +39,6 @@ function drawBand(
     if (x === 0) ctx.moveTo(x, topY)
     else         ctx.lineTo(x, topY)
   }
-  // Bottom edge — right to left
   for (let x = W; x >= 0; x -= 3) {
     const topY = baseY
       + Math.sin(x * 0.003 + t * sp + band.phase1) * 40
@@ -50,7 +48,6 @@ function drawBand(
   }
   ctx.closePath()
 
-  // Vertical gradient — fades at top and bottom edges
   const cy   = band.yBase * H
   const half = band.bandW / 2
   const grad = ctx.createLinearGradient(0, cy - half, 0, cy + half * 2)
@@ -82,7 +79,6 @@ export default function AuroraAnimation() {
     resize()
     window.addEventListener('resize', resize)
 
-    // Reduced motion: static bands, no animation
     if (reduced) {
       ctx.fillStyle = '#0A0A0F'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -101,7 +97,6 @@ export default function AuroraAnimation() {
       return () => window.removeEventListener('resize', resize)
     }
 
-    // Scroll velocity tracking for speed boost
     let scrollY      = window.scrollY
     let velocity     = 0
     let lastScrollMs = performance.now()
@@ -124,12 +119,10 @@ export default function AuroraAnimation() {
 
     function update(ts: number) {
       rafId = requestAnimationFrame(update)
-      if (document.hidden) return
       if (ts - lastMs < FRAME_MS) return
       const dt = ts - lastMs
       lastMs = ts
 
-      // Exponential velocity decay (500ms time constant)
       velocity *= Math.exp(-dt / 500)
       const speedMult = 1 + velocity * 0.005
 
@@ -137,16 +130,13 @@ export default function AuroraAnimation() {
       const W = renderCanvas.width
       const H = renderCanvas.height
 
-      // Fill solid background
       renderCtx.globalCompositeOperation = 'source-over'
       renderCtx.fillStyle = '#0A0A0F'
       renderCtx.fillRect(0, 0, W, H)
 
-      // Draw bands with additive blending (aurora glow)
       renderCtx.globalCompositeOperation = 'lighter'
       BANDS.forEach(band => drawBand(renderCtx, band, t, W, H, speedMult))
 
-      // Reset
       renderCtx.globalCompositeOperation = 'source-over'
     }
 
@@ -162,10 +152,10 @@ export default function AuroraAnimation() {
   return (
     <div
       className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 0, filter: 'blur(38px)', transform: 'translateZ(0)' }}
+      style={{ zIndex: 2, filter: 'blur(38px)', transform: 'translateZ(0)' }}
       aria-hidden="true"
     >
-      <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
     </div>
   )
 }

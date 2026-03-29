@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 
-// Colour pools — pre-parsed as [r,g,b] for fast alpha manipulation
+// Colour pools - pre-parsed as [r,g,b] for fast alpha manipulation
 const COLOUR_POOLS = [
   // 40% electric blue
   ...Array(40).fill([37, 99, 235] as [number, number, number]),
@@ -34,7 +34,7 @@ interface Particle {
 }
 
 function flowAngle(x: number, y: number, t: number): number {
-  // Sine-wave flow approximation — smooth, fast, no import needed
+  // Sine-wave flow approximation - smooth, fast, no import needed
   return (
     Math.sin(x * 0.005 + t * 0.2) *
     Math.cos(y * 0.008 + t * 0.1) *

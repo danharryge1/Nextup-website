@@ -15,7 +15,7 @@ export default function AnimatedTrend() {
       {/* Y axis */}
       <line x1="12" y1="14" x2="12" y2="62" stroke="var(--accent-teal)" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
 
-      {/* Animated trending polyline — draws itself */}
+      {/* Animated trending polyline - draws itself */}
       <polyline
         points="12,58 28,50 40,42 52,32 68,18"
         stroke="var(--accent-teal)"

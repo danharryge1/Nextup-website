@@ -15,7 +15,7 @@ export default function AnimatedCompass() {
       <line x1="40" y1="67" x2="40" y2="73" stroke="var(--accent-blue)" strokeWidth="1.5" strokeLinecap="round" />
       <line x1="7" y1="40" x2="13" y2="40" stroke="var(--accent-blue)" strokeWidth="1.5" strokeLinecap="round" />
       <line x1="67" y1="40" x2="73" y2="40" stroke="var(--accent-blue)" strokeWidth="1.5" strokeLinecap="round" />
-      {/* Needle — rotates */}
+      {/* Needle - rotates */}
       <g style={{ transformOrigin: '40px 40px', animation: 'slow-rotate 5s linear infinite' }}>
         <line x1="40" y1="22" x2="40" y2="40" stroke="var(--accent-blue)" strokeWidth="2.5" strokeLinecap="round" />
         <line x1="40" y1="40" x2="40" y2="56" stroke="var(--accent-blue)" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />

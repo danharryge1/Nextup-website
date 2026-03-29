@@ -3,38 +3,41 @@
 import { useState, useLayoutEffect, useEffect, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
+// Module-level flag: survives React Strict Mode double-mount within the same JS session.
+let introPlayed = false
+
 export default function LoadingScreen() {
-  const [show, setShow] = useState(false)
+  const [show, setShow]         = useState(false)
   const [wasShown, setWasShown] = useState(false)
 
   useLayoutEffect(() => {
-    try {
-      if (!sessionStorage.getItem('intro-seen')) {
-        setShow(true)
-      }
-    } catch {
-      // sessionStorage unavailable — skip intro
-    }
+    // Always remove the blocker so the page is never stuck invisible
     const blocker = document.getElementById('intro-blocker')
     if (blocker) blocker.remove()
+
+    // Skip if already played this session (sessionStorage) or this JS lifetime (module flag)
+    const alreadySeen = sessionStorage.getItem('intro-seen') === '1'
+    if (!introPlayed && !alreadySeen) {
+      introPlayed = true
+      setShow(true)
+    }
   }, [])
 
   useEffect(() => {
     if (!show) return
-    try { sessionStorage.setItem('intro-seen', '1') } catch { /* noop */ }
     setWasShown(true)
-    const t = setTimeout(() => setShow(false), 10000)
+    // Fallback dismiss after 12s if video never fires onEnded
+    const t = setTimeout(() => setShow(false), 12000)
     return () => clearTimeout(t)
   }, [show])
 
   useEffect(() => {
     if (wasShown && !show) {
-      // Fire immediately so hero video resets to 0 as loading screen begins its fade
+      sessionStorage.setItem('intro-seen', '1')
       window.dispatchEvent(new Event('loading-done'))
     }
   }, [wasShown, show])
 
-  // Callback ref: imperatively play the video the moment it mounts
   const handleVideoRef = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return
     video.muted = true
@@ -69,6 +72,7 @@ export default function LoadingScreen() {
             onError={() => setShow(false)}
             style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
           >
+            <source src="/videos/intro-final.mp4" type="video/mp4" />
             <source src="/videos/intro.mp4" type="video/mp4" />
           </video>
         </motion.div>
