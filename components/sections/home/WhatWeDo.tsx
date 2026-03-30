@@ -19,7 +19,7 @@ export default function WhatWeDo() {
   return (
     <section
       className="section-padding relative z-10"
-      style={{ background: 'var(--background)' }}
+      style={{ background: '#0A0A0F' }}
       aria-label="What we do"
     >
       <Container>

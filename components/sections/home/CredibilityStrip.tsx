@@ -18,12 +18,13 @@ export default function CredibilityStrip() {
 
   return (
     <section
-      className="bg-[var(--background-alt)] relative z-10"
+      className="relative z-10"
       style={{
-        paddingTop: 48,
+        background:    '#0F0F17',
+        paddingTop:    48,
         paddingBottom: 48,
-        borderTop: '1px solid var(--border)',
-        borderBottom: '1px solid var(--border)',
+        borderTop:     '1px solid var(--border)',
+        borderBottom:  '1px solid var(--border)',
       }}
       aria-label="Credibility metrics"
     >

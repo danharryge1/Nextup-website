@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import Container from '@/components/ui/Container'
-import SectionLabel from '@/components/ui/SectionLabel'
 import { SERVICES_OFFER_LABEL, SERVICES_OFFER_CARDS } from '@/lib/constants'
 
 const ACCENT: Record<string, { hex: string; rgb: string }> = {
@@ -15,9 +14,18 @@ export default function ServicesWeOffer() {
   return (
     <section className="relative z-10" style={{ background: '#0A0A0F' }} aria-label="Services we offer">
       <Container>
-        <SectionLabel colour="blue">{SERVICES_OFFER_LABEL}</SectionLabel>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="font-clash font-bold mb-10"
+          style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', lineHeight: 1.05, letterSpacing: '-0.02em', color: 'var(--foreground)' }}
+        >
+          {SERVICES_OFFER_LABEL}
+        </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {SERVICES_OFFER_CARDS.map((card, i) => {
             const { hex, rgb } = ACCENT[card.accent]
             return (

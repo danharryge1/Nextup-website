@@ -20,7 +20,7 @@ const cardVariants = {
 
 export default function TeamTeaser() {
   return (
-    <section className="section-padding bg-[var(--background)] relative z-10" aria-label="The team">
+    <section className="section-padding relative z-10" style={{ background: '#0A0A0F' }} aria-label="The team">
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import ServicesHero from '@/components/sections/services/ServicesHero'
-import HowWeHelp from '@/components/sections/services/HowWeHelp'
 import ServicesWeOffer from '@/components/sections/services/ServicesWeOffer'
 import ServiceBlock from '@/components/sections/services/ServiceBlock'
 import FAQ from '@/components/sections/services/FAQ'
@@ -17,9 +16,7 @@ export default function ServicesPage() {
       <ServicesHero />
       <div style={{ height: 80, background: '#0A0A0F' }} />
       <ServicesWeOffer />
-      <div style={{ height: 40, background: '#0A0A0F' }} />
-      <HowWeHelp />
-      <div style={{ height: 60, background: '#0A0A0F' }} />
+      <div style={{ height: 100, background: '#0A0A0F' }} />
       {SERVICE_BLOCKS.map((block, i) => (
         <div key={block.number}>
           {i > 0 && <div style={{ height: 80, background: i % 2 === 0 ? '#0A0A0F' : '#0D0D15' }} />}
