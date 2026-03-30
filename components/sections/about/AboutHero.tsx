@@ -18,27 +18,30 @@ export default function AboutHero() {
   return (
     <section
       className="relative flex flex-col items-center justify-center text-center overflow-hidden"
-      style={{ minHeight: '60vh', paddingTop: '120px', paddingBottom: '80px' }}
+      style={{
+        minHeight:     '60vh',
+        paddingTop:    '120px',
+        paddingBottom: '80px',
+        background:    'radial-gradient(ellipse 120% 80% at 50% -10%, rgba(0,138,160,0.22) 0%, rgba(37,99,235,0.1) 40%, #0A0A0F 65%)',
+      }}
       aria-label="About hero"
     >
-      {/* Gradient orb */}
+      {/* Static glow orb — no animation to prevent iOS GPU flicker */}
       <div
         aria-hidden="true"
         style={{
           position:        'absolute',
-          top:             '50%',
+          top:             '40%',
           left:            '50%',
-          width:           700,
-          height:          700,
+          width:           600,
+          height:          400,
           borderRadius:    '50%',
-          background:      'radial-gradient(circle, rgba(0,138,160,0.25) 0%, rgba(37,99,235,0.18) 40%, rgba(46,44,115,0.12) 70%, transparent 100%)',
-          filter:          'blur(80px)',
-          animation:       'orb-pulse 4s ease-in-out infinite',
-          pointerEvents:   'none',
-          zIndex:          0,
+          background:      'radial-gradient(circle, rgba(0,138,160,0.18) 0%, rgba(37,99,235,0.1) 50%, transparent 100%)',
+          filter:          'blur(60px)',
           transform:       'translate(-50%, -50%) translateZ(0)',
           WebkitTransform: 'translate(-50%, -50%) translateZ(0)',
-          willChange:      'transform',
+          pointerEvents:   'none',
+          zIndex:          0,
         }}
       />
 

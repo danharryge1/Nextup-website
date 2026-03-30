@@ -18,27 +18,30 @@ export default function ServicesHero() {
   return (
     <section
       className="relative flex flex-col items-center justify-center text-center overflow-hidden"
-      style={{ minHeight: '60vh', paddingTop: '120px', paddingBottom: '80px' }}
+      style={{
+        minHeight:  '60vh',
+        paddingTop: '120px',
+        paddingBottom: '80px',
+        background: 'radial-gradient(ellipse 120% 80% at 50% -10%, rgba(13,148,136,0.22) 0%, rgba(0,171,177,0.1) 40%, #0A0A0F 65%)',
+      }}
       aria-label="Services hero"
     >
-      {/* Gradient orb - teal dominant */}
+      {/* Static glow orb — no animation to prevent iOS GPU flicker */}
       <div
         aria-hidden="true"
         style={{
-          position:        'absolute',
-          top:             '50%',
-          left:            '50%',
-          width:           700,
-          height:          700,
-          borderRadius:    '50%',
-          background:      'radial-gradient(circle, rgba(13,148,136,0.25) 0%, rgba(0,171,177,0.18) 40%, rgba(37,99,235,0.12) 70%, transparent 100%)',
-          filter:          'blur(80px)',
-          animation:       'orb-pulse 4s ease-in-out infinite',
-          pointerEvents:   'none',
-          zIndex:          0,
-          transform:       'translate(-50%, -50%) translateZ(0)',
+          position:      'absolute',
+          top:           '40%',
+          left:          '50%',
+          width:         600,
+          height:        400,
+          borderRadius:  '50%',
+          background:    'radial-gradient(circle, rgba(13,148,136,0.18) 0%, rgba(37,99,235,0.1) 50%, transparent 100%)',
+          filter:        'blur(60px)',
+          transform:     'translate(-50%, -50%) translateZ(0)',
           WebkitTransform: 'translate(-50%, -50%) translateZ(0)',
-          willChange:      'transform',
+          pointerEvents: 'none',
+          zIndex:        0,
         }}
       />
 
