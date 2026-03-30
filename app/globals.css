@@ -37,7 +37,14 @@
   margin: 0;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar { display: none; }
 
 body {
   background: #0A0A0F;
@@ -47,6 +54,9 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  max-width: 100vw;
+  overscroll-behavior: none;
 }
 
 /* ---- Typography ---- */
@@ -252,6 +262,9 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
 }
 .card-back { transform: rotateY(180deg); }
+
+/* ---- Footer LinkedIn hover ---- */
+.footer-linkedin-link:hover { color: var(--accent-teal) !important; }
 
 /* ---- Reduced motion ---- */
 @media (prefers-reduced-motion: reduce) {

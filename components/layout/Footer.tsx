@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Mail, MapPin, Linkedin } from 'lucide-react'
-import { COMPANY_NAME, COMPANY_EMAIL, COMPANY_LOCATION, LINKEDIN_URL, NAV_LINKS, FOOTER_TAGLINE, FOOTER_COPYRIGHT } from '@/lib/constants'
+import { COMPANY_NAME, COMPANY_EMAIL, COMPANY_LOCATION, NAV_LINKS, TEAM_MEMBERS, FOOTER_TAGLINE, FOOTER_COPYRIGHT } from '@/lib/constants'
 
 export default function Footer() {
   return (
@@ -43,7 +43,7 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* Right: contact */}
+          {/* Right: contact + LinkedIn */}
           <div className="flex flex-col gap-3">
             <p className="font-satoshi text-sm font-semibold text-white/70 mb-1">Get in touch</p>
             <a
@@ -57,16 +57,24 @@ export default function Footer() {
               <MapPin size={14} />
               {COMPANY_LOCATION}
             </div>
-            <a
-              href={LINKEDIN_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-white/50 hover:text-accent-teal transition-colors duration-200 mt-1"
-              aria-label="Find us on LinkedIn"
-            >
-              <Linkedin size={14} />
-              Find us on LinkedIn
-            </a>
+
+            {/* Individual LinkedIn icons */}
+            <div className="flex gap-5 mt-2">
+              {TEAM_MEMBERS.map((member) => (
+                <a
+                  key={member.name}
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${member.name} on LinkedIn`}
+                  className="flex flex-col items-center gap-1 footer-linkedin-link transition-colors duration-200"
+                  style={{ color: 'var(--foreground-faint)', textDecoration: 'none' }}
+                >
+                  <Linkedin size={16} />
+                  <span style={{ fontSize: '0.8rem' }}>{member.name}</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>

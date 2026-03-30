@@ -37,16 +37,19 @@ export default function ServiceBlock({ number, title, description, colour, bgSty
   const mutedColour = isDark ? 'text-white/70' : 'text-[var(--foreground-muted)]'
   const bg          = isDark ? 'bg-[var(--background-dark)]' : 'bg-[var(--background)]'
   const rgb         = ACCENT_RGB[colour]
-  const barSide     = number === '02' ? 'right' : 'left'
 
   return (
-    <section className={clsx('section-padding relative overflow-hidden', bg)} aria-label={title}>
-      {/* Side accent bar */}
+    <section
+      className={clsx('relative overflow-hidden', bg)}
+      style={{ paddingTop: 'clamp(60px, 8vw, 100px)', paddingBottom: 'clamp(60px, 8vw, 100px)' }}
+      aria-label={title}
+    >
+      {/* Left accent bar — identical position for all blocks */}
       <div
         aria-hidden="true"
         style={{
           position:      'absolute',
-          [barSide]:     0,
+          left:          0,
           top:           0,
           bottom:        0,
           width:         4,
@@ -55,12 +58,12 @@ export default function ServiceBlock({ number, title, description, colour, bgSty
         }}
       />
 
-      {/* Background number - larger and more prominent */}
+      {/* Background number — identical positioning for all blocks */}
       <motion.span
         className="absolute top-8 right-4 md:right-12 font-clash font-bold select-none pointer-events-none"
         style={{ opacity: 0, fontSize: 'clamp(8rem, 20vw, 14rem)', lineHeight: 1, color: ACCENT_COLOURS[colour] }}
         initial={{ opacity: 0, scale: 2, filter: 'blur(8px)' }}
-        whileInView={{ opacity: isDark ? 0.14 : 0.12, scale: 1, filter: 'blur(0px)' }}
+        whileInView={{ opacity: 0.12, scale: 1, filter: 'blur(0px)' }}
         viewport={{ once: false, amount: 0.2 }}
         transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         aria-hidden="true"

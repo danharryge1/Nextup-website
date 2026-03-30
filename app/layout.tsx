@@ -9,7 +9,7 @@ import { COMPANY_NAME } from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: {
-    default: `${COMPANY_NAME} - Consultancy Built For What's Next`,
+    default: `${COMPANY_NAME} | Consultancy Built For What's Next`,
     template: `%s | ${COMPANY_NAME}`,
   },
   description:

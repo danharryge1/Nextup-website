@@ -89,7 +89,7 @@ export default function ContactPage() {
       </section>
 
       {/* Two-column + form */}
-      <section className="section-padding bg-[var(--background)] relative z-10" aria-label="Contact details">
+      <section id="booking" className="section-padding bg-[var(--background)] relative z-10" aria-label="Contact details">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-16 items-start">
             <motion.div

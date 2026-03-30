@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
@@ -10,26 +10,14 @@ import MagneticButton from '@/components/ui/MagneticButton'
 import MobileMenu from './MobileMenu'
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   return (
     <>
       <header
-        className={clsx(
-          'fixed top-0 left-0 right-0 z-50 h-20 transition-all duration-300',
-          scrolled
-            ? 'border-b border-[var(--border)]'
-            : 'bg-transparent'
-        )}
-        style={scrolled ? { background: 'rgba(10,10,15,0.92)', backdropFilter: 'blur(12px)' } : undefined}
+        className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-[var(--border)]"
+        style={{ background: 'rgba(10,10,15,0.92)', backdropFilter: 'blur(12px)' }}
       >
         <div className="container h-full flex items-center justify-between">
           {/* Logo */}

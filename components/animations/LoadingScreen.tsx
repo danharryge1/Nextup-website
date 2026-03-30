@@ -15,6 +15,9 @@ export default function LoadingScreen() {
     const blocker = document.getElementById('intro-blocker')
     if (blocker) blocker.remove()
 
+    // Skip intro on mobile devices — video aspect ratio is poor below 768px
+    if (window.innerWidth < 768) return
+
     // Skip if already played this session (sessionStorage) or this JS lifetime (module flag)
     const alreadySeen = sessionStorage.getItem('intro-seen') === '1'
     if (!introPlayed && !alreadySeen) {

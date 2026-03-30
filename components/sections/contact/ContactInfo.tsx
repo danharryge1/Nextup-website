@@ -54,7 +54,7 @@ export default function ContactInfo() {
               >
                 <Linkedin size={15} strokeWidth={2} />
               </span>
-              <span className="font-satoshi text-sm">{member.name} - {member.role}</span>
+              <span className="font-satoshi text-sm">{member.name}, {member.role}</span>
             </a>
           ))}
         </div>

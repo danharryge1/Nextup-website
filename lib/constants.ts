@@ -23,22 +23,22 @@ export const HERO_REASSURANCE = "No pressure. Just a conversation.";
 // HOME - WHAT WE DO
 export const WHATWEDO_LABEL = "WHAT WE DO";
 export const WHATWEDO_HEADING = "Problems worth solving";
-export const WHATWEDO_DESCRIPTOR = "We don't guess. We diagnose, plan, and hand you something you can actually use.";
+export const WHATWEDO_DESCRIPTOR = "Every business has a next move. We help you find it, plan it, and make it happen.";
 
 export const SERVICE_CARDS = [
   {
     title: "Strategy & Direction",
-    description: "Don't know where to focus? We cut through the noise and build a ==clear plan== with ==real priorities== so you stop guessing and start moving.",
+    description: "Lost in the noise? We'll build you a ==clear plan== with ==real priorities==, so you know exactly where to focus and what to do first.",
     colour: "blue" as const,
   },
   {
     title: "Growth & Marketing",
-    description: "Spending money but not seeing results? We find what's ==actually working==, kill what isn't, and build a growth engine that compounds.",
+    description: "Marketing that's costing more than it's making? We'll find what's ==actually working==, cut the waste, and build something that grows with you.",
     colour: "teal" as const,
   },
   {
     title: "Operations & Systems",
-    description: "Drowning in manual work? We ==streamline== how your business runs so your team focuses on ==what matters==.",
+    description: "Too much time on the wrong things? We'll ==streamline== your operations so your team can focus on ==what matters==.",
     colour: "coral" as const,
   },
 ];
@@ -126,19 +126,19 @@ export const PROCESS_STEPS = [
   {
     number: "01",
     title: "Understand",
-    description: "We dig into your business, your goals, and the ==real blockers== holding you back. No assumptions. No recycled frameworks.",
+    description: "We learn your business inside out: your goals, your challenges, and the ==real blockers== you might not even see yet.",
     colour: "blue" as const,
   },
   {
     number: "02",
     title: "Design",
-    description: "We build an ==actionable strategy== with ==real numbers== and timelines. You'll know exactly what needs to happen and why.",
+    description: "We design an ==actionable strategy== with ==real numbers== and timelines. Clear enough that you could explain it to anyone.",
     colour: "teal" as const,
   },
   {
     number: "03",
     title: "Deliver",
-    description: "You get a ==complete roadmap== you can act on immediately. No 50-page report collecting dust. Just ==clarity and direction==, and a built-in check-up to make sure it's actually working.",
+    description: "You walk away with a ==complete roadmap== you can act on straight away. Plus a built-in check-up to make sure it's ==actually working==.",
     colour: "coral" as const,
   },
 ];
@@ -155,7 +155,7 @@ export const TEAM_MEMBERS = [
 
 // HOME - FINAL CTA
 export const CTA_HEADING = "Ready to level up?";
-export const CTA_SUBTEXT = "Book a free discovery call. We'll learn about your business, and if we can help, we'll tell you exactly how.";
+export const CTA_SUBTEXT = "Book a free discovery call. We'll get to know your business and show you exactly where we can help.";
 export const CTA_BUTTON = "Book a Free Call";
 
 // ABOUT PAGE
@@ -163,8 +163,8 @@ export const ABOUT_HEADLINE = "A different kind of consultancy";
 export const ABOUT_SUBHEADLINE = "Everything we know, we learned by building. Not by reading about it.";
 
 export const ABOUT_STORY = [
-  "We've spent the last few years using ==AI, automation, and modern tech== to solve real problems across real projects - from youth unemployment strategy to operational overhauls to brand repositioning. We've run our own companies, delivered for paying clients, and we're still ==learning and applying every day==.",
-  "We built Next Up Co. because the traditional consultancy model is broken. Weeks of scoping before anyone understands the problem. A partner sells it, a junior delivers it. A 100-slide deck nobody uses. We do it differently - ==discovery first==, same team start to finish, and a built-in check-up because we actually care whether it worked.",
+  "Over the last few years we've used ==AI, automation, and modern tech== to solve real problems across real projects: youth unemployment strategy, operational overhauls, brand repositioning. We've built our own companies, delivered for real clients, and we're still ==learning and applying every day==.",
+  "We started Next Up Co. because the traditional consultancy model doesn't work for most businesses. Weeks of scoping before anyone understands the problem. The person who sold it disappears. You get a 100-slide deck that sits in a drawer. We do it differently: ==discovery first==, same team from start to finish, and a built-in check-up because we genuinely care whether it worked.",
 ];
 
 export const ABOUT_TEAM_BIOS = [
@@ -184,7 +184,7 @@ export const ABOUT_TEAM_BIOS = [
     role: "Co-Founder",
     bio: [
       "Brings ambition and positivity to the team. Always pushing the vision forward and finding ways to improve, learn, and innovate.",
-      "Director and co-lead of marketing for an events company that sold out its venue, then Head of Marketing for a healthcare startup.",
+      "Director and co-lead of marketing for an events company that sold out its venue, then Head of Marketing for a healthcare startup. Over 1.5 million views across TikTok and Instagram pages.",
       "Gym, travelling, and experiencing new cultures and perspectives.",
     ],
     image: "/images/team/Joe.jpg",
@@ -195,7 +195,7 @@ export const ABOUT_TEAM_BIOS = [
     role: "Co-Founder",
     bio: [
       "The organiser and connector of the team. Makes sure people stay aligned and that clients receive the work we deliver.",
-      "Built a social media audience of over 125,000 followers, ran e-commerce sales across 18+ countries, and led Student Showdown - a sold-out event with over 600 tickets sold.",
+      "Built a social media audience of over 125,000 followers, ran e-commerce sales across 18+ countries, and led Student Showdown, a sold-out event with over 600 tickets sold.",
       "Travelled to 40 countries, which has helped develop strong people skills and the ability to connect with different cultures.",
     ],
     image: "/images/team/Charlie.jpg",
@@ -217,7 +217,7 @@ export const ABOUT_TEAM_BIOS = [
 export const VALUES = [
   {
     title: "Where business is going, not where it was.",
-    description: "We use AI, automation, and modern tools because they work - not because they're trendy. While others are still catching up, we're already building with what's next.",
+    description: "We use AI, automation, and modern tools because they work. While others are still catching up, we're already building with what's next.",
     colour: "blue" as const,
   },
   {
@@ -234,13 +234,13 @@ export const VALUES = [
 
 // SERVICES PAGE
 export const SERVICES_HEADLINE = "What we do";
-export const SERVICES_SUBHEADLINE = "We don't guess. We diagnose, plan, and hand you something you can actually use.";
+export const SERVICES_SUBHEADLINE = "Every business has a next move. We help you find it, plan it, and make it happen.";
 
 export const SERVICE_BLOCKS = [
   {
     number: "01",
     title: "Strategy & Direction",
-    description: "Most businesses know something needs to change but can't pinpoint what. We cut through assumptions and build a ==clear picture== of where you are, where you need to go, and ==how to get there==.",
+    description: "Most businesses know something needs to change but can't quite pinpoint what. We help you see the ==clear picture==: where you are now, where you need to be, and ==how to get there==.",
     areas: ["Strategic planning", "Business model review", "Prioritisation frameworks", "Decision-making support"],
     colour: "blue" as const,
     bgStyle: "light" as const,
@@ -248,7 +248,7 @@ export const SERVICE_BLOCKS = [
   {
     number: "02",
     title: "Growth & Marketing",
-    description: "Throwing money at marketing without a system is expensive guesswork. We find what's ==actually driving results==, kill what isn't, and build a growth engine that ==compounds over time==.",
+    description: "Marketing without a system is expensive guesswork. We figure out what's ==actually driving results==, cut what isn't, and build something that ==compounds over time==.",
     areas: ["Marketing audits", "Customer acquisition strategy", "Brand positioning", "Digital presence"],
     colour: "teal" as const,
     bgStyle: "dark" as const,
@@ -256,7 +256,7 @@ export const SERVICE_BLOCKS = [
   {
     number: "03",
     title: "Operations & Systems",
-    description: "Your team is talented but drowning in inefficiency. We identify the ==bottlenecks==, simplify processes, and implement tools that ==give you your time back==.",
+    description: "Your team is talented but stuck in inefficiency. We find the ==bottlenecks==, simplify the processes, and put tools in place that ==give you your time back==.",
     areas: ["Process optimisation", "Workflow automation", "Tool implementation", "Team productivity"],
     colour: "coral" as const,
     bgStyle: "light" as const,
@@ -266,15 +266,15 @@ export const SERVICE_BLOCKS = [
 export const FAQ_ITEMS = [
   {
     question: "Are you experienced enough?",
-    answer: "We've built and run revenue-generating businesses from scratch, managed hundreds of clients, and study entrepreneurship full-time. More importantly, we bring ==tools, thinking, and speed== that most consultancies can't match. We're not here to theorise. We're here to get results.",
+    answer: "We've built and run our own businesses, delivered for real clients, and study entrepreneurship full-time. What sets us apart is the ==tools, thinking, and speed== we bring. We're practical: everything we do is built to get results.",
   },
   {
     question: "What industries do you work with?",
-    answer: "We're industry-agnostic. Our skills apply across sectors. We're most useful for small-to-medium businesses that need to move faster but don't have the internal resource to figure out how.",
+    answer: "We're industry-agnostic. Our skills apply across sectors. We're most useful for small to medium businesses that need to move faster but don't have the internal resource to figure out how.",
   },
   {
     question: "How long does a typical project take?",
-    answer: "Most engagements run 2-8 weeks. We ==move fast by design==.",
+    answer: "Most engagements run 2 to 8 weeks. We ==move fast by design==.",
   },
   {
     question: "What does it cost?",
@@ -288,8 +288,8 @@ export const FAQ_ITEMS = [
 
 // CONTACT PAGE
 export const CONTACT_HEADLINE = "Let's talk";
-export const CONTACT_SUBHEADLINE = "Book a free discovery call. We'll learn about your business, and if we can help, we'll tell you exactly how.";
-export const CONTACT_TEXT = "Whether you've got a specific challenge or just want to explore how we might help, we're happy to chat.";
+export const CONTACT_SUBHEADLINE = "Book a free discovery call. We'll get to know your business and show you exactly where we can help.";
+export const CONTACT_TEXT = "Got a specific challenge or just want to explore how we could help? We're happy to chat.";
 
 // ---- Additional labels (no hardcoded text rule) ----
 export const TEAM_SECTION_LABEL = "THE TEAM";

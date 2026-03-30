@@ -152,10 +152,10 @@ export default function AuroraAnimation() {
   return (
     <div
       className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 2, filter: 'blur(38px)', transform: 'translateZ(0)' }}
+      style={{ zIndex: 2, filter: 'blur(38px)', WebkitTransform: 'translateZ(0)', transform: 'translateZ(0)', willChange: 'transform' }}
       aria-hidden="true"
     >
-      <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
+      <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', WebkitTransform: 'translateZ(0)', transform: 'translateZ(0)' }} />
     </div>
   )
 }

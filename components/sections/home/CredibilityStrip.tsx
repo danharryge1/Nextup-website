@@ -43,7 +43,7 @@ export default function CredibilityStrip() {
             >
               <span
                 className="font-clash font-bold leading-none mb-2"
-                style={{ fontSize: '3rem', color: COLOUR_MAP[metric.colour] }}
+                style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', color: COLOUR_MAP[metric.colour] }}
               >
                 {metric.value}
               </span>
