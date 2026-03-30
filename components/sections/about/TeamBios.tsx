@@ -16,7 +16,7 @@ const ACCENT_BARS = [
 
 export default function TeamBios() {
   return (
-    <section className="section-padding bg-[var(--background-alt)] relative z-10" aria-label="Meet the team">
+    <section className="section-padding relative z-10" style={{ background: '#0F0F17' }} aria-label="Meet the team">
       <Container>
         <SectionLabel colour="teal">{TEAM_BIOS_LABEL}</SectionLabel>
 

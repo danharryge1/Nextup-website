@@ -173,7 +173,7 @@ export const ABOUT_TEAM_BIOS = [
     role: "Co-Founder",
     bio: [
       "Keeps things moving every single day. Holds the team accountable, pushes decisions forward, and brings a sharp edge with AI and modern tech.",
-      "Built and sold out a boxing events company to 500+ people, ran a dropshipping business, and invests on the side.",
+      "Started building businesses at 15. Ran a four-figure Facebook marketplace dropshipping business, built and sold out a boxing events company to 500+ people, and actively invests in crypto, index funds, and stocks.",
       "Gym, painting, travelling, and currently trying to learn the guitar.",
     ],
     image: "/images/team/Dan.jpg",
@@ -233,6 +233,29 @@ export const VALUES = [
 ];
 
 // SERVICES PAGE
+export const SERVICES_OFFER_LABEL = "SERVICES WE OFFER";
+
+export const SERVICES_OFFER_CARDS = [
+  {
+    title: "Standalone Projects",
+    description: "We take on a specific challenge, diagnose the real problem, and build you a clear strategy you can act on. Fixed scope, clear timeline, one deliverable you can use straight away.",
+    note: "Typical timeline: 2-8 weeks",
+    accent: "blue" as const,
+  },
+  {
+    title: "Implementation",
+    description: "Want us to help put the plan into action? We work alongside your team to execute the strategy, build the systems, and make sure everything lands properly.",
+    note: "Hands-on delivery with your team",
+    accent: "teal" as const,
+  },
+  {
+    title: "Maintenance",
+    description: "Once the work is done, we stay in touch. Regular check-ins to make sure things are working, adjustments when needed, and ongoing support as your business evolves.",
+    note: "Ongoing advisory and support",
+    accent: "coral" as const,
+  },
+];
+
 export const SERVICES_HEADLINE = "What we do";
 export const SERVICES_SUBHEADLINE = "Every business has a next move. We help you find it, plan it, and make it happen.";
 

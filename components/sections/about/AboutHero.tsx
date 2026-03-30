@@ -25,17 +25,20 @@ export default function AboutHero() {
       <div
         aria-hidden="true"
         style={{
-          position:     'absolute',
-          top:          '50%',
-          left:         '50%',
-          width:        700,
-          height:       700,
-          borderRadius: '50%',
-          background:   'radial-gradient(circle, rgba(0,138,160,0.25) 0%, rgba(37,99,235,0.18) 40%, rgba(46,44,115,0.12) 70%, transparent 100%)',
-          filter:       'blur(80px)',
-          animation:    'orb-pulse 4s ease-in-out infinite',
-          pointerEvents: 'none',
-          zIndex:       0,
+          position:        'absolute',
+          top:             '50%',
+          left:            '50%',
+          width:           700,
+          height:          700,
+          borderRadius:    '50%',
+          background:      'radial-gradient(circle, rgba(0,138,160,0.25) 0%, rgba(37,99,235,0.18) 40%, rgba(46,44,115,0.12) 70%, transparent 100%)',
+          filter:          'blur(80px)',
+          animation:       'orb-pulse 4s ease-in-out infinite',
+          pointerEvents:   'none',
+          zIndex:          0,
+          transform:       'translate(-50%, -50%) translateZ(0)',
+          WebkitTransform: 'translate(-50%, -50%) translateZ(0)',
+          willChange:      'transform',
         }}
       />
 

@@ -7,7 +7,7 @@ const TAGS = ['Strategy', 'Implementation', 'Maintenance', 'Consulting']
 
 export default function HowWeHelp() {
   return (
-    <section className="relative z-10 pb-2" style={{ paddingTop: 'clamp(32px, 4vw, 48px)', paddingBottom: 'clamp(32px, 4vw, 48px)' }} aria-label="How we help">
+    <section className="relative z-10 pb-2" style={{ paddingTop: 'clamp(32px, 4vw, 48px)', paddingBottom: 'clamp(32px, 4vw, 48px)', background: '#0A0A0F' }} aria-label="How we help">
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

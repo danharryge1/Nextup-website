@@ -30,17 +30,20 @@ export default function ContactPage() {
         <div
           aria-hidden="true"
           style={{
-            position:      'absolute',
-            top:           '50%',
-            left:          '50%',
-            width:         700,
-            height:        700,
-            borderRadius:  '50%',
-            background:    'radial-gradient(circle, rgba(244,63,94,0.25) 0%, rgba(245,158,11,0.14) 50%, rgba(37,99,235,0.10) 80%, transparent 100%)',
-            filter:        'blur(80px)',
-            animation:     'orb-pulse 4s ease-in-out infinite',
-            pointerEvents: 'none',
-            zIndex:        0,
+            position:        'absolute',
+            top:             '50%',
+            left:            '50%',
+            width:           700,
+            height:          700,
+            borderRadius:    '50%',
+            background:      'radial-gradient(circle, rgba(244,63,94,0.25) 0%, rgba(245,158,11,0.14) 50%, rgba(37,99,235,0.10) 80%, transparent 100%)',
+            filter:          'blur(80px)',
+            animation:       'orb-pulse 4s ease-in-out infinite',
+            pointerEvents:   'none',
+            zIndex:          0,
+            transform:       'translate(-50%, -50%) translateZ(0)',
+            WebkitTransform: 'translate(-50%, -50%) translateZ(0)',
+            willChange:      'transform',
           }}
         />
 
@@ -89,7 +92,7 @@ export default function ContactPage() {
       </section>
 
       {/* Two-column + form */}
-      <section id="booking" className="section-padding bg-[var(--background)] relative z-10" aria-label="Contact details">
+      <section id="booking" className="section-padding relative z-10" style={{ background: '#0A0A0F' }} aria-label="Contact details">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-16 items-start">
             <motion.div

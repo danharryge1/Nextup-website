@@ -8,7 +8,7 @@ import { ABOUT_STORY_LABEL, ABOUT_STORY } from '@/lib/constants'
 
 export default function Story() {
   return (
-    <section className="section-padding bg-[var(--background)] relative z-10 overflow-hidden" aria-label="Our story">
+    <section className="section-padding relative z-10 overflow-hidden" style={{ background: '#0A0A0F' }} aria-label="Our story">
       {/* Background node pattern */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <svg

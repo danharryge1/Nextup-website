@@ -12,7 +12,7 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section className="section-padding bg-[var(--background-alt)] relative z-10" aria-label="FAQ">
+    <section className="section-padding relative z-10" style={{ background: '#0F0F17' }} aria-label="FAQ">
       <Container>
         <div className="max-w-2xl mx-auto">
           <SectionLabel colour="blue">COMMON QUESTIONS</SectionLabel>

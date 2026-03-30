@@ -3,13 +3,12 @@
 import { motion } from 'framer-motion'
 import Container from '@/components/ui/Container'
 import HighlightText from '@/components/ui/HighlightText'
-import { clsx } from 'clsx'
 
 interface ServiceBlockProps {
   number: string
   title: string
   description: string
-  areas: string[]
+  areas?: string[]
   colour: 'blue' | 'teal' | 'coral'
   bgStyle: 'light' | 'dark'
 }
@@ -32,16 +31,25 @@ const HIGHLIGHT_MAP = {
   coral: 'coral' as const,
 }
 
-export default function ServiceBlock({ number, title, description, colour, bgStyle }: Omit<ServiceBlockProps, 'areas'> & { areas?: string[] }) {
-  const isDark      = bgStyle === 'dark'
-  const mutedColour = isDark ? 'text-white/70' : 'text-[var(--foreground-muted)]'
-  const bg          = isDark ? 'bg-[var(--background-dark)]' : 'bg-[var(--background)]'
+// Solid backgrounds — no aurora bleed-through below the hero
+const BG_SOLID = {
+  light: '#0A0A0F',
+  dark:  '#0D0D15',
+}
+
+export default function ServiceBlock({ number, title, description, colour, bgStyle }: ServiceBlockProps) {
+  const mutedColour = 'text-[var(--foreground-muted)]'
   const rgb         = ACCENT_RGB[colour]
+  const bg          = BG_SOLID[bgStyle]
 
   return (
     <section
-      className={clsx('relative overflow-hidden', bg)}
-      style={{ paddingTop: 'clamp(60px, 8vw, 100px)', paddingBottom: 'clamp(60px, 8vw, 100px)' }}
+      className="relative overflow-hidden"
+      style={{
+        background:    bg,
+        paddingTop:    'clamp(60px, 8vw, 100px)',
+        paddingBottom: 'clamp(60px, 8vw, 100px)',
+      }}
       aria-label={title}
     >
       {/* Left accent bar — identical position for all blocks */}
@@ -58,12 +66,17 @@ export default function ServiceBlock({ number, title, description, colour, bgSty
         }}
       />
 
-      {/* Background number — identical positioning for all blocks */}
+      {/* Background number — scale starts at 1 so overflow-hidden never clips it */}
       <motion.span
         className="absolute top-8 right-4 md:right-12 font-clash font-bold select-none pointer-events-none"
-        style={{ opacity: 0, fontSize: 'clamp(8rem, 20vw, 14rem)', lineHeight: 1, color: ACCENT_COLOURS[colour] }}
-        initial={{ opacity: 0, scale: 2, filter: 'blur(8px)' }}
-        whileInView={{ opacity: 0.12, scale: 1, filter: 'blur(0px)' }}
+        style={{
+          fontSize:   'clamp(8rem, 20vw, 14rem)',
+          lineHeight: 1,
+          color:      ACCENT_COLOURS[colour],
+          opacity:    0,
+        }}
+        initial={{ opacity: 0, filter: 'blur(8px)' }}
+        whileInView={{ opacity: 0.12, filter: 'blur(0px)' }}
         viewport={{ once: false, amount: 0.2 }}
         transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         aria-hidden="true"
@@ -105,7 +118,7 @@ export default function ServiceBlock({ number, title, description, colour, bgSty
           </div>
 
           {/* Description */}
-          <p className={clsx('text-lg leading-relaxed max-w-2xl', mutedColour)}>
+          <p className={`text-lg leading-relaxed max-w-2xl ${mutedColour}`}>
             <HighlightText text={description} highlightColour={HIGHLIGHT_MAP[colour]} />
           </p>
         </motion.div>

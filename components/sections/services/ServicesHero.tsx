@@ -25,17 +25,20 @@ export default function ServicesHero() {
       <div
         aria-hidden="true"
         style={{
-          position:      'absolute',
-          top:           '50%',
-          left:          '50%',
-          width:         700,
-          height:        700,
-          borderRadius:  '50%',
-          background:    'radial-gradient(circle, rgba(13,148,136,0.25) 0%, rgba(0,171,177,0.18) 40%, rgba(37,99,235,0.12) 70%, transparent 100%)',
-          filter:        'blur(80px)',
-          animation:     'orb-pulse 4s ease-in-out infinite',
-          pointerEvents: 'none',
-          zIndex:        0,
+          position:        'absolute',
+          top:             '50%',
+          left:            '50%',
+          width:           700,
+          height:          700,
+          borderRadius:    '50%',
+          background:      'radial-gradient(circle, rgba(13,148,136,0.25) 0%, rgba(0,171,177,0.18) 40%, rgba(37,99,235,0.12) 70%, transparent 100%)',
+          filter:          'blur(80px)',
+          animation:       'orb-pulse 4s ease-in-out infinite',
+          pointerEvents:   'none',
+          zIndex:          0,
+          transform:       'translate(-50%, -50%) translateZ(0)',
+          WebkitTransform: 'translate(-50%, -50%) translateZ(0)',
+          willChange:      'transform',
         }}
       />
 
