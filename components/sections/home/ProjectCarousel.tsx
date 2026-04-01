@@ -70,21 +70,21 @@ export default function ProjectCarousel() {
   const glowRefs     = useRef<(HTMLDivElement | null)[]>([])
   const rafTiltRef   = useRef<number>(0)
   const tiltStateRef = useRef<Array<{
-    rx: number; ry: number; gx: number; gy: number
+    rx: number; ry: number; gx: number; gy: number; sc: number; op: number
     targetRx: number; targetRy: number; targetGx: number; targetGy: number
-    hovered: boolean
+    targetSc: number; targetOp: number
   }>>([])
 
   useEffect(() => { setIsMobile(window.innerWidth < 640) }, [])
 
-  // RAF-based lerp tilt loop
+  // RAF-based lerp tilt + glow loop. Everything lerps — no instant jumps.
   useEffect(() => {
     tiltStateRef.current = PROJECTS.map(() => ({
-      rx: 0, ry: 0, gx: 50, gy: 50,
+      rx: 0, ry: 0, gx: 50, gy: 50, sc: 1, op: 0,
       targetRx: 0, targetRy: 0, targetGx: 50, targetGy: 50,
-      hovered: false,
+      targetSc: 1, targetOp: 0,
     }))
-    const LERP = 0.12
+    const LERP = 0.1
 
     function tick() {
       rafTiltRef.current = requestAnimationFrame(tick)
@@ -93,21 +93,18 @@ export default function ProjectCarousel() {
         s.ry += (s.targetRy - s.ry) * LERP
         s.gx += (s.targetGx - s.gx) * LERP
         s.gy += (s.targetGy - s.gy) * LERP
+        s.sc += (s.targetSc - s.sc) * LERP
+        s.op += (s.targetOp - s.op) * LERP
 
         const el     = tiltRefs.current[i]
         const glowEl = glowRefs.current[i]
         if (!el) return
 
-        const absRx = Math.abs(s.rx)
-        const absRy = Math.abs(s.ry)
-        const scale = s.hovered ? 1.02 : Math.max(1, 1 + (absRx + absRy) * 0.0003)
-
-        el.style.transform = `rotateX(${s.rx}deg) rotateY(${s.ry}deg) scale(${scale})`
+        el.style.transform = `rotateX(${s.rx}deg) rotateY(${s.ry}deg) scale(${s.sc})`
 
         if (glowEl) {
-          const opacity = s.hovered ? 1 : Math.min(1, (absRx + absRy) / 10)
-          glowEl.style.opacity = String(opacity)
-          glowEl.style.background = `radial-gradient(circle 120px at ${s.gx}% ${s.gy}%, rgba(255,255,255,0.06), transparent)`
+          glowEl.style.opacity    = String(Math.max(0, s.op))
+          glowEl.style.background = `radial-gradient(circle 120px at ${s.gx}% ${s.gy}%, rgba(255,255,255,0.07), transparent)`
         }
       })
     }
@@ -179,18 +176,19 @@ export default function ProjectCarousel() {
     s.targetRy = ((x - rect.width  / 2) / (rect.width  / 2)) * 12
     s.targetGx = (x / rect.width)  * 100
     s.targetGy = (y / rect.height) * 100
-    s.hovered  = true
+    s.targetSc = 1.02
+    s.targetOp = 1
   }
 
   const handleTiltReset = (i: number) => {
     const s = tiltStateRef.current[i]
-    if (s) {
-      s.targetRx = 0
-      s.targetRy = 0
-      s.targetGx = 50
-      s.targetGy = 50
-      s.hovered  = false
-    }
+    if (!s) return
+    s.targetRx = 0
+    s.targetRy = 0
+    s.targetGx = 50
+    s.targetGy = 50
+    s.targetSc = 1
+    s.targetOp = 0
   }
 
   const activeAccent = PROJECTS[active].colour
@@ -322,7 +320,7 @@ export default function ProjectCarousel() {
                       )}
                     </div>
 
-                    {/* Mouse-following glow overlay */}
+                    {/* Mouse-following glow overlay — opacity managed by RAF, no CSS transition */}
                     <div
                       ref={el => { glowRefs.current[i] = el }}
                       style={{
@@ -330,7 +328,6 @@ export default function ProjectCarousel() {
                         inset:         0,
                         borderRadius:  20,
                         opacity:       0,
-                        transition:    'opacity 0.3s',
                         pointerEvents: 'none',
                         zIndex:        20,
                       }}
@@ -378,6 +375,17 @@ export default function ProjectCarousel() {
                       }}
                     >
                       {project.category.toUpperCase()}
+                    </span>
+                    <span
+                      className="relative z-10 text-center font-clash"
+                      style={{
+                        fontSize:   '1.05rem',
+                        fontWeight: 600,
+                        color:      '#ffffff',
+                        lineHeight: 1.1,
+                      }}
+                    >
+                      {project.subtitle ?? project.name}
                     </span>
                     <p
                       className="relative z-10 text-center"

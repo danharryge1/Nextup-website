@@ -116,9 +116,16 @@ export default function AuroraAnimation() {
     let rafId  = 0
     let lastMs = 0
 
+    // When the tab becomes visible again after being hidden, reset lastMs so the
+    // next frame doesn't get a huge dt that could cause a visible jump/stutter
+    const onVisibility = () => {
+      if (!document.hidden) lastMs = 0
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+
     function update(ts: number) {
       rafId = requestAnimationFrame(update)
-      const dt = lastMs === 0 ? 16 : ts - lastMs
+      const dt = lastMs === 0 ? 16 : Math.min(ts - lastMs, 100) // cap dt at 100ms
       lastMs = ts
 
       velocity *= Math.exp(-dt / 500)
@@ -144,6 +151,7 @@ export default function AuroraAnimation() {
       cancelAnimationFrame(rafId)
       window.removeEventListener('resize', resize)
       window.removeEventListener('scroll', onScroll)
+      document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [])
 
@@ -153,10 +161,10 @@ export default function AuroraAnimation() {
       style={{
         zIndex: 2,
         filter: 'blur(38px)',
-        transform: 'translateZ(0)',
-        WebkitTransform: 'translateZ(0)',
+        WebkitFilter: 'blur(38px)',
+        transform: 'translate3d(0,0,0)',
+        WebkitTransform: 'translate3d(0,0,0)',
         willChange: 'transform',
-        contain: 'strict',
         backfaceVisibility: 'hidden',
         WebkitBackfaceVisibility: 'hidden',
       } as React.CSSProperties}
