@@ -115,12 +115,10 @@ export default function AuroraAnimation() {
 
     let rafId  = 0
     let lastMs = 0
-    const FRAME_MS = 1000 / 30
 
     function update(ts: number) {
       rafId = requestAnimationFrame(update)
-      if (ts - lastMs < FRAME_MS) return
-      const dt = ts - lastMs
+      const dt = lastMs === 0 ? 16 : ts - lastMs
       lastMs = ts
 
       velocity *= Math.exp(-dt / 500)
@@ -152,10 +150,29 @@ export default function AuroraAnimation() {
   return (
     <div
       className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 2, filter: 'blur(38px)', WebkitTransform: 'translateZ(0)', transform: 'translateZ(0)', willChange: 'transform' }}
+      style={{
+        zIndex: 2,
+        filter: 'blur(38px)',
+        transform: 'translateZ(0)',
+        WebkitTransform: 'translateZ(0)',
+        willChange: 'transform',
+        contain: 'strict',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+      } as React.CSSProperties}
       aria-hidden="true"
     >
-      <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', WebkitTransform: 'translateZ(0)', transform: 'translateZ(0)' }} />
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '100%',
+          transform: 'translateZ(0)',
+          WebkitTransform: 'translateZ(0)',
+          imageRendering: 'auto',
+        } as React.CSSProperties}
+      />
     </div>
   )
 }

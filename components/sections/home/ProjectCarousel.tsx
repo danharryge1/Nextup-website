@@ -68,8 +68,53 @@ export default function ProjectCarousel() {
   const touchStartX  = useRef(0)
   const tiltRefs     = useRef<(HTMLDivElement | null)[]>([])
   const glowRefs     = useRef<(HTMLDivElement | null)[]>([])
+  const rafTiltRef   = useRef<number>(0)
+  const tiltStateRef = useRef<Array<{
+    rx: number; ry: number; gx: number; gy: number
+    targetRx: number; targetRy: number; targetGx: number; targetGy: number
+    hovered: boolean
+  }>>([])
 
   useEffect(() => { setIsMobile(window.innerWidth < 640) }, [])
+
+  // RAF-based lerp tilt loop
+  useEffect(() => {
+    tiltStateRef.current = PROJECTS.map(() => ({
+      rx: 0, ry: 0, gx: 50, gy: 50,
+      targetRx: 0, targetRy: 0, targetGx: 50, targetGy: 50,
+      hovered: false,
+    }))
+    const LERP = 0.12
+
+    function tick() {
+      rafTiltRef.current = requestAnimationFrame(tick)
+      tiltStateRef.current.forEach((s, i) => {
+        s.rx += (s.targetRx - s.rx) * LERP
+        s.ry += (s.targetRy - s.ry) * LERP
+        s.gx += (s.targetGx - s.gx) * LERP
+        s.gy += (s.targetGy - s.gy) * LERP
+
+        const el     = tiltRefs.current[i]
+        const glowEl = glowRefs.current[i]
+        if (!el) return
+
+        const absRx = Math.abs(s.rx)
+        const absRy = Math.abs(s.ry)
+        const scale = s.hovered ? 1.02 : Math.max(1, 1 + (absRx + absRy) * 0.0003)
+
+        el.style.transform = `rotateX(${s.rx}deg) rotateY(${s.ry}deg) scale(${scale})`
+
+        if (glowEl) {
+          const opacity = s.hovered ? 1 : Math.min(1, (absRx + absRy) / 10)
+          glowEl.style.opacity = String(opacity)
+          glowEl.style.background = `radial-gradient(circle 120px at ${s.gx}% ${s.gy}%, rgba(255,255,255,0.06), transparent)`
+        }
+      })
+    }
+
+    rafTiltRef.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafTiltRef.current)
+  }, [])
 
   const CARD_W = isMobile ? 180 : 240
   const CARD_H = isMobile ? 280 : 360
@@ -125,29 +170,27 @@ export default function ProjectCarousel() {
     if (Math.abs(diff) > 2) return
     const el = tiltRefs.current[i]
     if (!el) return
+    const s = tiltStateRef.current[i]
+    if (!s) return
     const rect = el.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-    const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -12
-    const rotateY = ((x - rect.width  / 2) / (rect.width  / 2)) * 12
-    el.style.transition = 'transform 0.1s ease'
-    el.style.transform  = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`
-    const glowEl = glowRefs.current[i]
-    if (glowEl) {
-      const gx = (x / rect.width)  * 100
-      const gy = (y / rect.height) * 100
-      glowEl.style.background = `radial-gradient(circle 120px at ${gx}% ${gy}%, rgba(255,255,255,0.06), transparent)`
-      glowEl.style.opacity    = '1'
-    }
+    s.targetRx = ((y - rect.height / 2) / (rect.height / 2)) * -12
+    s.targetRy = ((x - rect.width  / 2) / (rect.width  / 2)) * 12
+    s.targetGx = (x / rect.width)  * 100
+    s.targetGy = (y / rect.height) * 100
+    s.hovered  = true
   }
 
   const handleTiltReset = (i: number) => {
-    const el = tiltRefs.current[i]
-    if (!el) return
-    el.style.transition = 'transform 0.4s ease'
-    el.style.transform  = 'rotateX(0deg) rotateY(0deg) scale(1)'
-    const glowEl = glowRefs.current[i]
-    if (glowEl) glowEl.style.opacity = '0'
+    const s = tiltStateRef.current[i]
+    if (s) {
+      s.targetRx = 0
+      s.targetRy = 0
+      s.targetGx = 50
+      s.targetGy = 50
+      s.hovered  = false
+    }
   }
 
   const activeAccent = PROJECTS[active].colour
@@ -217,6 +260,7 @@ export default function ProjectCarousel() {
                       inset:                     0,
                       backfaceVisibility:        'hidden',
                       WebkitBackfaceVisibility:  'hidden',
+                      willChange:                'transform',
                     } as React.CSSProperties}
                     onMouseMove={(e) => !isFlipped && handleTilt(e, i, diff)}
                     onMouseLeave={() => handleTiltReset(i)}

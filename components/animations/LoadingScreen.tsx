@@ -11,19 +11,24 @@ export default function LoadingScreen() {
   const [wasShown, setWasShown] = useState(false)
 
   useLayoutEffect(() => {
-    // Always remove the blocker so the page is never stuck invisible
-    const blocker = document.getElementById('intro-blocker')
-    if (blocker) blocker.remove()
-
     // Skip intro on mobile devices — video aspect ratio is poor below 768px
-    if (window.innerWidth < 768) return
+    if (window.innerWidth < 768) {
+      const blocker = document.getElementById('intro-blocker')
+      if (blocker) blocker.remove()
+      return
+    }
 
     // Skip if already played this session (sessionStorage) or this JS lifetime (module flag)
     const alreadySeen = sessionStorage.getItem('intro-seen') === '1'
     if (!introPlayed && !alreadySeen) {
       introPlayed = true
+      // Set show=true first so React re-renders with the overlay before we remove
+      // the blocker — prevents a one-frame flash of the underlying page on Windows
       setShow(true)
     }
+    // Remove blocker after state update is scheduled (runs before browser paint)
+    const blocker = document.getElementById('intro-blocker')
+    if (blocker) blocker.remove()
   }, [])
 
   useEffect(() => {

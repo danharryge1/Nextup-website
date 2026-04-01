@@ -28,13 +28,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap" />
         <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap" />
+        {/* Preload intro video so it plays immediately on first visit */}
+        <link rel="preload" as="video" href="/videos/intro-final.mp4" type="video/mp4" />
       </head>
       <body>
-        {/* Synchronous script - runs before first paint. Hides body for first-time
-            visitors so page content never flashes before the intro overlay appears. */}
+        {/* Synchronous script - runs before first paint. Shows a black overlay div for
+            first-time visitors so the page never flashes before the intro overlay appears.
+            Using a div (not visibility:hidden) ensures consistent behaviour on Windows. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var s=document.createElement('style');s.id='intro-blocker';s.textContent='body{visibility:hidden}';document.head.appendChild(s)})()`,
+            __html: `(function(){try{if(sessionStorage.getItem('intro-seen')==='1')return;if(window.innerWidth<768)return;var d=document.createElement('div');d.id='intro-blocker';d.style.cssText='position:fixed;inset:0;background:#0A0A0F;z-index:9999';document.body.appendChild(d)}catch(e){}})()`,
           }}
         />
         <LoadingScreen />
