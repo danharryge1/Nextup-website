@@ -105,7 +105,7 @@ export const PROJECTS = [
     logo: "/images/Logos/soar the project.png",
   },
   {
-    name: "Donatti",
+    name: "Donatti LTD.",
     description: "Built a bespoke deal analysis tool, a project cost estimator, built write a full business plan, and a legally structured partnership agreement, giving a first-time property investor everything needed to operate professionally from day one.",
     category: "TBC",
     colour: "amber" as const,

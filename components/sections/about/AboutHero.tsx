@@ -1,13 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import Container from '@/components/ui/Container'
 import { ABOUT_HEADLINE, ABOUT_SUBHEADLINE } from '@/lib/constants'
 
 export default function AboutHero() {
-  const [hideChevron, setHideChevron] = useState(false)
+  const [hideChevron, setHideChevron]   = useState(false)
+  const [bgVisible, setBgVisible]       = useState(true)
+  const sectionRef                      = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const handleScroll = () => setHideChevron(window.scrollY > 100)
@@ -15,17 +17,42 @@ export default function AboutHero() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setBgVisible(entry.isIntersecting),
+      { threshold: 0 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section
+      ref={sectionRef}
       className="relative flex flex-col items-center justify-center text-center overflow-hidden"
       style={{
         minHeight:     '60vh',
         paddingTop:    '120px',
         paddingBottom: '80px',
-        background:    'radial-gradient(ellipse 120% 80% at 50% -10%, rgba(0,138,160,0.22) 0%, rgba(37,99,235,0.1) 40%, #0A0A0F 65%)',
       }}
       aria-label="About hero"
     >
+      {/* Fixed background — stays in place as you scroll */}
+      <div
+        aria-hidden="true"
+        style={{
+          position:      'fixed',
+          inset:         0,
+          zIndex:        3,
+          pointerEvents: 'none',
+          opacity:       bgVisible ? 1 : 0,
+          transition:    'opacity 0.5s ease',
+          background:    'radial-gradient(ellipse 120% 80% at 50% -10%, rgba(0,138,160,0.22) 0%, rgba(37,99,235,0.1) 40%, transparent 65%)',
+        }}
+      />
+
       {/* Static glow orb — no animation to prevent iOS GPU flicker */}
       <div
         aria-hidden="true"
