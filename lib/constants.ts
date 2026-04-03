@@ -57,6 +57,7 @@ export type AccentColour = "blue" | "teal" | "coral" | "amber";
 export const PROJECTS = [
   {
     name: "Spark",
+    niche: "Youth Unemployment Hub",
     subtitle: "Youth Unemployment Hub",
     description: "Youth employment innovation, Liverpool. Partnered with a youth employment hub in Birkenhead to tackle youth unemployment. Delivered a strategic plan to reduce the area's 6,000 NEETs on a £10k budget.",
     category: "Strategy",
@@ -65,6 +66,7 @@ export const PROJECTS = [
   },
   {
     name: "Marden Digital",
+    niche: "Website Developer",
     subtitle: "Web Design Agency",
     description: "Built and implemented a systemised blueprint to reduce lead times on client content, allowing this web design agency to increase output and scale their revenue.",
     category: "Operations",
@@ -73,6 +75,7 @@ export const PROJECTS = [
   },
   {
     name: "Student Showdown Boxing",
+    niche: "Sporting Events",
     subtitle: "Sporting Events",
     description: "Supported two student fight-night events by overseeing talent management, designing a new website and supporting marketing efforts. This contributed to a total 900+ tickets sold.",
     category: "Events",
@@ -81,6 +84,7 @@ export const PROJECTS = [
   },
   {
     name: "RBC Events",
+    niche: "Sporting Events",
     subtitle: "Boxing Events",
     description: "In a timeframe of just 8 weeks, our team established a consistent and striking brand via social media marketing. We also managed operations, including boxer management and comprehensive event planning. The above lead to a sold-out event with 500+ viewers for a company that needed a credible, innovative strategy to stand out in a highly competitive sector.",
     category: "Events",
@@ -89,6 +93,7 @@ export const PROJECTS = [
   },
   {
     name: "Africa Oye",
+    niche: "Music Festival",
     subtitle: "A Music Event",
     description: "Designed actionable marketing strategies for the UK's biggest African music festival. Delivered credible strategies to attract international and local students, while managing a large-scale transition from a free to paid event. We also provided access to the necessary network to expand Africa Oye's attendee demographic.",
     category: "Marketing",
@@ -97,6 +102,7 @@ export const PROJECTS = [
   },
   {
     name: "Castel Clothing",
+    niche: "Personal Shopper",
     subtitle: "Personal Shopper",
     description: "Designed and implemented a brand repositioning strategy for this luxury-tier personal shopping service. Our roadmap included a revised product segment & distribution model, fresh marketing strategy, and automation that has allowed Castel to reach and serve a more affluent customer base.",
     category: "Brand",
@@ -105,6 +111,7 @@ export const PROJECTS = [
   },
   {
     name: "Soar the Project",
+    niche: "Clothing Brand",
     subtitle: "Clothing Brand",
     description: "Built a comprehensive go-to-market strategy for this Egypt-based clothing brand with a following of 16k+. This included an efficient shipping process, reliable SOP and an innovative marketing approach, specifically designed to help S.T.P break into the UK fashion landscape.",
     category: "Marketing",
@@ -113,6 +120,7 @@ export const PROJECTS = [
   },
   {
     name: "Donatti LTD.",
+    niche: "Property Investor",
     subtitle: "Property",
     description: "Built a bespoke deal analysis tool, a project cost estimator, built write a full business plan, and a legally structured partnership agreement, giving a first-time property investor everything needed to operate professionally from day one.",
     category: "Strategy",
@@ -121,6 +129,7 @@ export const PROJECTS = [
   },
   {
     name: "RegenerUS",
+    niche: "Environmental Charity",
     subtitle: "Environmental Charity",
     description: "Coded an educational interactive experience to raise environmental awareness by teaching users about the measures taken by major cities to battle climate change.",
     category: "Education",

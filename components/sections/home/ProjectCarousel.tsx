@@ -59,17 +59,50 @@ function cardOpacity(diff: number): number {
   return Math.max(0, 1 - Math.abs(diff) * 0.3)
 }
 
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+
 export default function ProjectCarousel() {
-  const [active, setActive]           = useState(0)
+  const [active, setActive]             = useState(0)
   const [flippedIndex, setFlippedIndex] = useState<number | null>(null)
-  const [isMobile, setIsMobile]       = useState(false)
+  const [isMobile, setIsMobile]         = useState(false)
+
   const autoRef      = useRef<ReturnType<typeof setInterval> | null>(null)
   const isHoveredRef = useRef(false)
   const touchStartX  = useRef(0)
   const tiltRefs     = useRef<(HTMLDivElement | null)[]>([])
   const glowRefs     = useRef<(HTMLDivElement | null)[]>([])
 
+  // Per-card lerp state
+  const targetRot  = useRef(PROJECTS.map(() => ({ x: 0, y: 0 })))
+  const currentRot = useRef(PROJECTS.map(() => ({ x: 0, y: 0 })))
+  const glowPos    = useRef(PROJECTS.map(() => ({ x: 50, y: 50 })))
+  const frameIds   = useRef<(number | undefined)[]>(PROJECTS.map(() => undefined))
+
   useEffect(() => { setIsMobile(window.innerWidth < 640) }, [])
+
+  // Stable animate function via ref so recursive RAF always calls latest version
+  const animateFnRef = useRef<(i: number) => void>()
+  animateFnRef.current = (i: number) => {
+    const el     = tiltRefs.current[i]
+    const glowEl = glowRefs.current[i]
+    if (!el || !glowEl) return
+
+    const cur  = currentRot.current[i]
+    const tgt  = targetRot.current[i]
+    const glow = glowPos.current[i]
+
+    cur.x = lerp(cur.x, tgt.x, 0.12)
+    cur.y = lerp(cur.y, tgt.y, 0.12)
+
+    el.style.transform = `perspective(800px) rotateX(${cur.x}deg) rotateY(${cur.y}deg) scale(1.02)`
+    glowEl.style.background = `radial-gradient(circle 180px at ${glow.x}% ${glow.y}%, rgba(255,255,255,0.12), transparent)`
+
+    if (Math.abs(cur.x - tgt.x) > 0.01 || Math.abs(cur.y - tgt.y) > 0.01) {
+      frameIds.current[i] = requestAnimationFrame(() => animateFnRef.current!(i))
+    } else {
+      frameIds.current[i] = undefined
+    }
+  }
 
   const CARD_W = isMobile ? 180 : 240
   const CARD_H = isMobile ? 280 : 360
@@ -109,7 +142,6 @@ export default function ProjectCarousel() {
       setActive(i)
       setFlippedIndex(null)
     } else {
-      // Centre card: toggle flip
       setFlippedIndex(prev => prev === i ? null : i)
     }
     pauseAuto()
@@ -121,40 +153,54 @@ export default function ProjectCarousel() {
     if (Math.abs(diff) > 40) { go(diff > 0 ? 1 : -1); startAuto() }
   }
 
-  const handleTilt = (e: React.MouseEvent<HTMLDivElement>, i: number, diff: number) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, i: number, diff: number) => {
     if (Math.abs(diff) > 3) return
     const el = tiltRefs.current[i]
-    const glowEl = glowRefs.current[i]
     if (!el) return
+
     const rect = el.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-    const rotateX = ((y - centerY) / centerY) * -10
-    const rotateY = ((x - centerX) / centerX) * 10
-    el.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`
-    el.style.transition = 'transform 0.05s ease'
-    if (glowEl) {
-      const glowX = (x / rect.width) * 100
-      const glowY = (y / rect.height) * 100
-      glowEl.style.background = `radial-gradient(circle 180px at ${glowX}% ${glowY}%, rgba(255,255,255,0.12), transparent)`
-      glowEl.style.opacity = '1'
-      glowEl.style.transition = 'opacity 0.05s ease'
+
+    targetRot.current[i] = {
+      x: ((y - rect.height / 2) / (rect.height / 2)) * -10,
+      y: ((x - rect.width  / 2) / (rect.width  / 2)) *  10,
+    }
+    glowPos.current[i] = {
+      x: (x / rect.width)  * 100,
+      y: (y / rect.height) * 100,
+    }
+
+    const glowEl = glowRefs.current[i]
+    if (glowEl) glowEl.style.opacity = '1'
+
+    if (!frameIds.current[i]) {
+      frameIds.current[i] = requestAnimationFrame(() => animateFnRef.current!(i))
     }
   }
 
-  const handleTiltReset = (i: number) => {
-    const el = tiltRefs.current[i]
+  const handleMouseLeave = (i: number) => {
+    const fid = frameIds.current[i]
+    if (fid) cancelAnimationFrame(fid)
+    frameIds.current[i] = undefined
+
+    targetRot.current[i]  = { x: 0, y: 0 }
+    currentRot.current[i] = { x: 0, y: 0 }
+
+    const el     = tiltRefs.current[i]
     const glowEl = glowRefs.current[i]
     if (el) {
-      el.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)'
       el.style.transition = 'transform 0.4s ease'
+      el.style.transform  = 'perspective(800px) rotateX(0) rotateY(0) scale(1)'
     }
     if (glowEl) {
-      glowEl.style.opacity = '0'
-      glowEl.style.transition = 'opacity 0.4s ease'
+      glowEl.style.transition = 'opacity 0.3s ease'
+      glowEl.style.opacity    = '0'
     }
+    setTimeout(() => {
+      if (el)     el.style.transition     = ''
+      if (glowEl) glowEl.style.transition = ''
+    }, 400)
   }
 
   const activeAccent = PROJECTS[active].colour
@@ -178,11 +224,11 @@ export default function ProjectCarousel() {
           onTouchEnd={onTouchEnd}
         >
           {PROJECTS.map((project, i) => {
-            const diff     = displayDiff(i, active)
-            const visible  = Math.abs(diff) <= 3
-            const accent   = project.colour
-            const rgb      = ACCENT_RGB[accent]
-            const hex      = ACCENT_HEX[accent]
+            const diff      = displayDiff(i, active)
+            const visible   = Math.abs(diff) <= 3
+            const accent    = project.colour
+            const rgb       = ACCENT_RGB[accent]
+            const hex       = ACCENT_HEX[accent]
             const isFlipped = flippedIndex === i
 
             return (
@@ -216,18 +262,18 @@ export default function ProjectCarousel() {
                     transition:           'transform 0.6s cubic-bezier(0.4,0,0.2,1)',
                   } as React.CSSProperties}
                 >
-                  {/* Front face - tilt target */}
+                  {/* Front face — tilt target */}
                   <div
                     ref={el => { tiltRefs.current[i] = el }}
                     style={{
-                      position:                  'absolute',
-                      inset:                     0,
-                      backfaceVisibility:        'hidden',
-                      WebkitBackfaceVisibility:  'hidden',
-                      willChange:                'transform',
+                      position:                 'absolute',
+                      inset:                    0,
+                      backfaceVisibility:       'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      willChange:               'transform',
                     } as React.CSSProperties}
-                    onMouseMove={(e) => !isFlipped && handleTilt(e, i, diff)}
-                    onMouseLeave={() => handleTiltReset(i)}
+                    onMouseMove={(e) => !isFlipped && handleMouseMove(e, i, diff)}
+                    onMouseLeave={() => handleMouseLeave(i)}
                   >
                     {/* Card face */}
                     <div
@@ -251,10 +297,7 @@ export default function ProjectCarousel() {
                       />
                       {project.logo ? (
                         <>
-                          <div
-                            className="relative z-10"
-                            style={{ width: '80%', height: '60%' }}
-                          >
+                          <div className="relative z-10" style={{ width: '80%', height: '55%' }}>
                             <Image
                               src={project.logo}
                               alt={project.name}
@@ -263,20 +306,46 @@ export default function ProjectCarousel() {
                               sizes="192px"
                             />
                           </div>
+                          {/* Name */}
                           <span
                             className="font-clash text-center px-4 relative z-10 mt-3"
-                            style={{ fontSize: '1rem', fontWeight: 500, color: 'rgba(255,255,255,0.75)' }}
+                            style={{ fontSize: '0.95rem', fontWeight: 600, color: 'rgba(255,255,255,0.9)' }}
                           >
-                            {project.subtitle ?? project.name}
+                            {project.name}
+                          </span>
+                          {/* Niche — smaller muted label */}
+                          <span
+                            className="text-center px-4 relative z-10 mt-1"
+                            style={{
+                              fontSize:   '0.72rem',
+                              fontFamily: 'Satoshi, sans-serif',
+                              fontWeight: 500,
+                              color:      `rgba(${rgb},0.85)`,
+                              letterSpacing: '0.04em',
+                            }}
+                          >
+                            {project.niche}
                           </span>
                         </>
                       ) : (
                         <>
                           <span
                             className="font-clash font-bold text-center px-4 relative z-10"
-                            style={{ fontSize: '1.8rem', lineHeight: 1.1, color: '#ffffff' }}
+                            style={{ fontSize: '1.5rem', lineHeight: 1.1, color: '#ffffff' }}
                           >
-                            {project.subtitle ?? project.name}
+                            {project.name}
+                          </span>
+                          <span
+                            className="text-center px-4 relative z-10 mt-2"
+                            style={{
+                              fontSize:   '0.72rem',
+                              fontFamily: 'Satoshi, sans-serif',
+                              fontWeight: 500,
+                              color:      `rgba(${rgb},0.85)`,
+                              letterSpacing: '0.04em',
+                            }}
+                          >
+                            {project.niche}
                           </span>
                           <div
                             className="mt-3 relative z-10"
@@ -286,7 +355,7 @@ export default function ProjectCarousel() {
                       )}
                     </div>
 
-                    {/* Mouse-following glow overlay — opacity managed by RAF, no CSS transition */}
+                    {/* Mouse-following glow overlay */}
                     <div
                       ref={el => { glowRefs.current[i] = el }}
                       style={{
@@ -318,29 +387,40 @@ export default function ProjectCarousel() {
                       alignItems:               'center',
                       justifyContent:           'center',
                       padding:                  '20px',
-                      gap:                      12,
+                      gap:                      10,
                     } as React.CSSProperties}
                   >
                     <div
                       style={{
-                        background: `radial-gradient(ellipse 80% 50% at 50% 0%, rgba(${rgb},0.10), transparent)`,
-                        position:   'absolute',
-                        top:        0, left: 0, right: 0,
-                        height:     '60%',
+                        background:    `radial-gradient(ellipse 80% 50% at 50% 0%, rgba(${rgb},0.10), transparent)`,
+                        position:      'absolute',
+                        top: 0, left: 0, right: 0,
+                        height:        '60%',
                         pointerEvents: 'none',
                       }}
                     />
+                    {/* Niche — heading at top */}
+                    <span
+                      className="relative z-10 text-center"
+                      style={{
+                        fontSize:      '0.68rem',
+                        fontFamily:    'Satoshi, sans-serif',
+                        fontWeight:    700,
+                        letterSpacing: '0.12em',
+                        color:         hex,
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {project.niche}
+                    </span>
+                    {/* Project name */}
                     <span
                       className="relative z-10 text-center font-clash"
-                      style={{
-                        fontSize:   '1.05rem',
-                        fontWeight: 600,
-                        color:      '#ffffff',
-                        lineHeight: 1.1,
-                      }}
+                      style={{ fontSize: '1.05rem', fontWeight: 600, color: '#ffffff', lineHeight: 1.1 }}
                     >
                       {project.name}
                     </span>
+                    {/* Description */}
                     <p
                       className="relative z-10 text-center"
                       style={{
@@ -376,9 +456,9 @@ export default function ProjectCarousel() {
                 onClick={() => { setActive(i); setFlippedIndex(null); startAuto() }}
                 className="rounded-full transition-all duration-300"
                 style={{
-                  width:      i === active ? 20 : 6,
-                  height:     6,
-                  minHeight:  24,
+                  width:     i === active ? 20 : 6,
+                  height:    6,
+                  minHeight: 24,
                   background: i === active ? ACCENT_HEX[p.colour] : 'var(--border-dark)',
                 }}
                 aria-label={`Go to ${p.name}`}
