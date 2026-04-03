@@ -24,24 +24,12 @@ export default function Hero() {
   const videoY    = useTransform(scrollY, [0, 700], [0, isMobile ? 0 : -350])
 
   useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-    const tryPlay = (v: HTMLVideoElement) => {
-      v.muted = true
-      v.setAttribute('muted', '')
-      if (v.paused) v.play().catch(() => {})
-    }
-    tryPlay(video)
-    // Also play once enough data is buffered (covers slow networks / HEVC decode delay)
-    const onCanPlay = () => tryPlay(video)
-    video.addEventListener('canplay', onCanPlay, { once: true })
-    // On first visit reset+play after the intro fades out
-    const onDone = () => { video.currentTime = 0; tryPlay(video) }
-    window.addEventListener('loading-done', onDone, { once: true })
-    return () => {
-      video.removeEventListener('canplay', onCanPlay)
-      window.removeEventListener('loading-done', onDone)
-    }
+    const vid = videoRef.current
+    if (!vid) return
+    vid.muted = true
+    vid.setAttribute('muted', '')
+    vid.setAttribute('playsinline', '')
+    vid.play().catch(() => {})
   }, [])
 
   useEffect(() => {

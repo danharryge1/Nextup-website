@@ -68,50 +68,8 @@ export default function ProjectCarousel() {
   const touchStartX  = useRef(0)
   const tiltRefs     = useRef<(HTMLDivElement | null)[]>([])
   const glowRefs     = useRef<(HTMLDivElement | null)[]>([])
-  const rafTiltRef   = useRef<number>(0)
-  const tiltStateRef = useRef<Array<{
-    rx: number; ry: number; gx: number; gy: number; sc: number; op: number
-    targetRx: number; targetRy: number; targetGx: number; targetGy: number
-    targetSc: number; targetOp: number
-  }>>([])
 
   useEffect(() => { setIsMobile(window.innerWidth < 640) }, [])
-
-  // RAF-based lerp tilt + glow loop. Everything lerps — no instant jumps.
-  useEffect(() => {
-    tiltStateRef.current = PROJECTS.map(() => ({
-      rx: 0, ry: 0, gx: 50, gy: 50, sc: 1, op: 0,
-      targetRx: 0, targetRy: 0, targetGx: 50, targetGy: 50,
-      targetSc: 1, targetOp: 0,
-    }))
-    const LERP = 0.1
-
-    function tick() {
-      rafTiltRef.current = requestAnimationFrame(tick)
-      tiltStateRef.current.forEach((s, i) => {
-        s.rx += (s.targetRx - s.rx) * LERP
-        s.ry += (s.targetRy - s.ry) * LERP
-        s.gx += (s.targetGx - s.gx) * LERP
-        s.gy += (s.targetGy - s.gy) * LERP
-        s.sc += (s.targetSc - s.sc) * LERP
-        s.op += (s.targetOp - s.op) * LERP
-
-        const el     = tiltRefs.current[i]
-        const glowEl = glowRefs.current[i]
-        if (!el) return
-
-        el.style.transform = `rotateX(${s.rx}deg) rotateY(${s.ry}deg) scale(${s.sc})`
-
-        if (glowEl) {
-          glowEl.style.opacity    = String(Math.max(0, s.op))
-          glowEl.style.background = `radial-gradient(circle 120px at ${s.gx}% ${s.gy}%, rgba(255,255,255,0.07), transparent)`
-        }
-      })
-    }
-
-    rafTiltRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafTiltRef.current)
-  }, [])
 
   const CARD_W = isMobile ? 180 : 240
   const CARD_H = isMobile ? 280 : 360
@@ -164,31 +122,39 @@ export default function ProjectCarousel() {
   }
 
   const handleTilt = (e: React.MouseEvent<HTMLDivElement>, i: number, diff: number) => {
-    if (Math.abs(diff) > 2) return
+    if (Math.abs(diff) > 3) return
     const el = tiltRefs.current[i]
+    const glowEl = glowRefs.current[i]
     if (!el) return
-    const s = tiltStateRef.current[i]
-    if (!s) return
     const rect = el.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-    s.targetRx = ((y - rect.height / 2) / (rect.height / 2)) * -12
-    s.targetRy = ((x - rect.width  / 2) / (rect.width  / 2)) * 12
-    s.targetGx = (x / rect.width)  * 100
-    s.targetGy = (y / rect.height) * 100
-    s.targetSc = 1.02
-    s.targetOp = 1
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+    const rotateX = ((y - centerY) / centerY) * -10
+    const rotateY = ((x - centerX) / centerX) * 10
+    el.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`
+    el.style.transition = 'transform 0.05s ease'
+    if (glowEl) {
+      const glowX = (x / rect.width) * 100
+      const glowY = (y / rect.height) * 100
+      glowEl.style.background = `radial-gradient(circle 180px at ${glowX}% ${glowY}%, rgba(255,255,255,0.12), transparent)`
+      glowEl.style.opacity = '1'
+      glowEl.style.transition = 'opacity 0.05s ease'
+    }
   }
 
   const handleTiltReset = (i: number) => {
-    const s = tiltStateRef.current[i]
-    if (!s) return
-    s.targetRx = 0
-    s.targetRy = 0
-    s.targetGx = 50
-    s.targetGy = 50
-    s.targetSc = 1
-    s.targetOp = 0
+    const el = tiltRefs.current[i]
+    const glowEl = glowRefs.current[i]
+    if (el) {
+      el.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)'
+      el.style.transition = 'transform 0.4s ease'
+    }
+    if (glowEl) {
+      glowEl.style.opacity = '0'
+      glowEl.style.transition = 'opacity 0.4s ease'
+    }
   }
 
   const activeAccent = PROJECTS[active].colour
@@ -301,7 +267,7 @@ export default function ProjectCarousel() {
                             className="font-clash text-center px-4 relative z-10 mt-3"
                             style={{ fontSize: '1rem', fontWeight: 500, color: 'rgba(255,255,255,0.75)' }}
                           >
-                            {project.name}
+                            {project.subtitle ?? project.name}
                           </span>
                         </>
                       ) : (
@@ -310,7 +276,7 @@ export default function ProjectCarousel() {
                             className="font-clash font-bold text-center px-4 relative z-10"
                             style={{ fontSize: '1.8rem', lineHeight: 1.1, color: '#ffffff' }}
                           >
-                            {project.name}
+                            {project.subtitle ?? project.name}
                           </span>
                           <div
                             className="mt-3 relative z-10"
@@ -365,18 +331,6 @@ export default function ProjectCarousel() {
                       }}
                     />
                     <span
-                      className="relative z-10"
-                      style={{
-                        fontSize:      '0.7rem',
-                        fontFamily:    'Satoshi, sans-serif',
-                        fontWeight:    700,
-                        letterSpacing: '0.12em',
-                        color:         hex,
-                      }}
-                    >
-                      {project.category.toUpperCase()}
-                    </span>
-                    <span
                       className="relative z-10 text-center font-clash"
                       style={{
                         fontSize:   '1.05rem',
@@ -385,7 +339,7 @@ export default function ProjectCarousel() {
                         lineHeight: 1.1,
                       }}
                     >
-                      {project.subtitle ?? project.name}
+                      {project.name}
                     </span>
                     <p
                       className="relative z-10 text-center"

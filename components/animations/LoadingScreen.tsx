@@ -2,19 +2,14 @@
 
 import { useEffect } from 'react'
 
-// The actual intro video is started by the inline script in layout.tsx
-// (runs before React hydrates, so there is zero startup delay).
-// This component's only job is to fire 'loading-done' on pages where
-// no intro is shown (mobile / repeat visits), so the Hero video can start.
+// On repeat visits the intro overlay is hidden instantly by the inline script.
+// This component fires 'loading-done' so Hero can start its video on those visits.
 export default function LoadingScreen() {
   useEffect(() => {
-    const blocker = document.getElementById('intro-blocker')
-    if (!blocker) {
-      // No intro showing — fire immediately so Hero starts
+    const el = document.getElementById('intro-overlay')
+    if (!el || el.style.display === 'none') {
       window.dispatchEvent(new Event('loading-done'))
     }
-    // If blocker exists the inline script will fire 'loading-done' after the
-    // video ends and the fade-out completes.
   }, [])
 
   return null

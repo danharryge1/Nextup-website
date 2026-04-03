@@ -200,6 +200,37 @@ h1, h2, h3, h4, h5, h6 {
   border: none;
 }
 
+/* ---- Intro overlay (CSS-only, plays before JS hydrates) ---- */
+@keyframes intro-logo-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes intro-overlay-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0A0A0F;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Fade the whole screen out: starts at 1.3s, lasts 0.4s */
+  animation: intro-overlay-out 0.4s ease 1.3s forwards;
+  pointer-events: none;
+}
+
+#intro-overlay-logo {
+  width: 140px;
+  height: auto;
+  opacity: 0;
+  /* Fade in over 0.5s immediately */
+  animation: intro-logo-in 0.5s ease 0s forwards;
+}
+
 /* ---- Animations ---- */
 @keyframes float-up-down  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
 @keyframes slow-rotate    { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
