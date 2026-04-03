@@ -29,6 +29,8 @@ export default function Hero() {
     vid.muted = true
     vid.defaultMuted = true
     vid.volume = 0
+    vid.currentTime = 0
+    vid.load()
     vid.play().catch(() => {
       vid.style.display = 'none'
     })
@@ -49,7 +51,7 @@ export default function Hero() {
       {/* Video background with parallax */}
       <motion.div
         className="absolute z-0"
-        style={{ top: -80, left: 0, right: 0, bottom: 0, y: videoY }}
+        style={{ top: '-5vh', left: 0, right: 0, bottom: 0, y: videoY }}
       >
         <video
           ref={videoRef}
@@ -58,7 +60,8 @@ export default function Hero() {
           loop
           playsInline
           preload="auto"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4, filter: 'blur(1px)' }}
+          poster="/videos/poster.jpg"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, filter: 'blur(1px)' }}
         >
           <source src="/videos/hero-bg.mp4" type="video/mp4" />
         </video>

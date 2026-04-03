@@ -62,6 +62,7 @@ function cardOpacity(diff: number): number {
 export default function ProjectCarousel() {
   const [active, setActive]             = useState(0)
   const [flippedIndex, setFlippedIndex] = useState<number | null>(null)
+  const [delayedFlip, setDelayedFlip]   = useState<number | null>(null)
   const [isMobile, setIsMobile]         = useState(false)
 
   const autoRef      = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -69,6 +70,13 @@ export default function ProjectCarousel() {
   const touchStartX  = useRef(0)
 
   useEffect(() => { setIsMobile(window.innerWidth < 640) }, [])
+
+  // Delayed flip state for z-index swap — updates 300ms after flippedIndex changes
+  // so the z-index only swaps when the card is edge-on (halfway through the flip)
+  useEffect(() => {
+    const timer = setTimeout(() => setDelayedFlip(flippedIndex), 300)
+    return () => clearTimeout(timer)
+  }, [flippedIndex])
 
   const CARD_W = isMobile ? 180 : 240
   const CARD_H = isMobile ? 280 : 360
@@ -185,6 +193,7 @@ export default function ProjectCarousel() {
                       inset:                    0,
                       backfaceVisibility:       'hidden',
                       WebkitBackfaceVisibility: 'hidden',
+                      zIndex:                   delayedFlip === i ? 0 : 2,
                     } as React.CSSProperties}
                   >
                     {/* Tiltable card — tilt applied here via onMouseMove */}
@@ -317,9 +326,12 @@ export default function ProjectCarousel() {
                       display:                  'flex',
                       flexDirection:            'column',
                       alignItems:               'center',
-                      justifyContent:           'center',
-                      padding:                  '20px',
-                      gap:                      10,
+                      justifyContent:           'flex-start',
+                      padding:                  isMobile ? '20px' : '24px',
+                      gap:                      8,
+                      zIndex:                   delayedFlip === i ? 2 : 0,
+                      overflowY:                'auto',
+                      WebkitOverflowScrolling:  'touch',
                     } as React.CSSProperties}
                   >
                     <div
@@ -329,35 +341,40 @@ export default function ProjectCarousel() {
                         top: 0, left: 0, right: 0,
                         height:        '60%',
                         pointerEvents: 'none',
+                        flexShrink:    0,
                       }}
                     />
                     <span
                       className="relative z-10 text-center"
                       style={{
-                        fontSize:      '0.68rem',
+                        fontSize:      '0.65rem',
                         fontFamily:    'Satoshi, sans-serif',
                         fontWeight:    700,
                         letterSpacing: '0.12em',
                         color:         hex,
                         textTransform: 'uppercase',
+                        flexShrink:    0,
+                        marginTop:     isMobile ? 4 : 8,
                       }}
                     >
                       {project.niche}
                     </span>
                     <span
                       className="relative z-10 text-center font-clash"
-                      style={{ fontSize: '1.05rem', fontWeight: 600, color: '#ffffff', lineHeight: 1.1 }}
+                      style={{ fontSize: isMobile ? '1rem' : '1.05rem', fontWeight: 600, color: '#ffffff', lineHeight: 1.1, flexShrink: 0 }}
                     >
                       {project.name}
                     </span>
                     <p
                       className="relative z-10 text-center"
                       style={{
-                        fontSize:   '0.82rem',
+                        fontSize:   isMobile ? '0.8rem' : '0.82rem',
                         fontFamily: 'Satoshi, sans-serif',
                         color:      'rgba(255,255,255,0.72)',
-                        lineHeight: 1.55,
-                      }}
+                        lineHeight: 1.5,
+                        overflowY:  'auto',
+                        WebkitOverflowScrolling: 'touch',
+                      } as React.CSSProperties}
                     >
                       {project.description}
                     </p>

@@ -5,16 +5,17 @@ import { useEffect, useRef, useState } from 'react'
 export default function LoadingScreen() {
   const [show, setShow]         = useState(true)
   const [fadeOut, setFadeOut]   = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    // Skip on mobile
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      setShow(false)
+    // Detect mobile first — don't mount on small screens
+    if (window.innerWidth < 768) {
+      setIsMobile(true)
       return
     }
-    // Skip if already played
-    if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('intro')) {
+    // Skip if already played this session
+    if (sessionStorage.getItem('intro')) {
       setShow(false)
       return
     }
@@ -53,7 +54,7 @@ export default function LoadingScreen() {
     return () => clearTimeout(timer)
   }, [])
 
-  if (!show) return null
+  if (isMobile || !show) return null
 
   return (
     <div style={{
