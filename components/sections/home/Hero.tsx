@@ -27,9 +27,11 @@ export default function Hero() {
     const vid = videoRef.current
     if (!vid) return
     vid.muted = true
-    vid.setAttribute('muted', '')
-    vid.setAttribute('playsinline', '')
-    vid.play().catch(() => {})
+    vid.defaultMuted = true
+    vid.volume = 0
+    vid.play().catch(() => {
+      vid.style.display = 'none'
+    })
   }, [])
 
   useEffect(() => {
@@ -56,12 +58,6 @@ export default function Hero() {
           loop
           playsInline
           preload="auto"
-          onCanPlay={e => {
-            const v = e.currentTarget
-            v.muted = true
-            v.setAttribute('muted', '')
-            if (v.paused) v.play().catch(() => {})
-          }}
           style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4, filter: 'blur(1px)' }}
         >
           <source src="/videos/hero-bg.mp4" type="video/mp4" />

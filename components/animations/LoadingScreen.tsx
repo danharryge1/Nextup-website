@@ -1,78 +1,83 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function LoadingScreen() {
-  const [mounted, setMounted] = useState(true)
-  const [fading, setFading]   = useState(false)
+  const [show, setShow]         = useState(true)
+  const [fadeOut, setFadeOut]   = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     // Skip on mobile
-    if (window.innerWidth < 768) {
-      setMounted(false)
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setShow(false)
       return
     }
-
-    // Skip if already played this session
-    if (sessionStorage.getItem('introPlayed')) {
-      setMounted(false)
+    // Skip if already played
+    if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('intro')) {
+      setShow(false)
       return
     }
 
     const vid = videoRef.current
-    if (!vid) return
+    if (!vid) { setShow(false); return }
 
+    // Force muted
     vid.muted = true
-    vid.playsInline = true
-    vid.setAttribute('muted', '')
-    vid.setAttribute('playsinline', '')
+    vid.defaultMuted = true
+    vid.volume = 0
 
-    const dismiss = () => {
-      setFading(true)
-      setTimeout(() => setMounted(false), 300)
+    // Try to play
+    const playAttempt = vid.play()
+    if (playAttempt) {
+      playAttempt.then(() => {
+        if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('intro', '1')
+      }).catch(() => {
+        // Can't autoplay, just hide
+        setShow(false)
+      })
     }
 
-    vid.play().then(() => {
-      sessionStorage.setItem('introPlayed', 'true')
-    }).catch(() => {
-      // Autoplay blocked — skip intro entirely
-      setMounted(false)
-    })
-
-    vid.addEventListener('ended', dismiss, { once: true })
-    const fallback = setTimeout(dismiss, 4000)
-
-    return () => {
-      vid.removeEventListener('ended', dismiss)
-      clearTimeout(fallback)
+    // When video ends, fade out
+    vid.onended = () => {
+      setFadeOut(true)
+      setTimeout(() => setShow(false), 500)
     }
+
+    // Safety timeout — hide after 5 seconds no matter what
+    const timer = setTimeout(() => {
+      setFadeOut(true)
+      setTimeout(() => setShow(false), 500)
+    }, 5000)
+
+    return () => clearTimeout(timer)
   }, [])
 
-  if (!mounted) return null
+  if (!show) return null
 
   return (
-    <div
-      style={{
-        position:     'fixed',
-        inset:        0,
-        zIndex:       9999,
-        background:   '#0A0A0F',
-        display:      'flex',
-        alignItems:   'center',
-        justifyContent: 'center',
-        opacity:      fading ? 0 : 1,
-        transition:   'opacity 0.3s ease',
-        pointerEvents: fading ? 'none' : 'all',
-      }}
-    >
+    <div style={{
+      position:   'fixed',
+      inset:      0,
+      zIndex:     99999,
+      background: '#0A0A0F',
+      display:    'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      opacity:    fadeOut ? 0 : 1,
+      transition: 'opacity 0.5s ease',
+    }}>
       <video
         ref={videoRef}
-        autoPlay
         muted
         playsInline
+        autoPlay
         preload="auto"
-        style={{ maxWidth: '60vw', maxHeight: '60vh', objectFit: 'contain' }}
+        style={{
+          width:      '100vw',
+          height:     '100vh',
+          objectFit:  'cover',
+        }}
       >
         <source src="/videos/intro.mp4" type="video/mp4" />
       </video>
