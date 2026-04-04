@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 import Container from '@/components/ui/Container'
 import SectionLabel from '@/components/ui/SectionLabel'
 import { PROJECTS, CAROUSEL_LABEL, type AccentColour } from '@/lib/constants'
@@ -418,6 +418,16 @@ export default function ProjectCarousel() {
             <ChevronRight size={18} />
           </button>
         </div>
+
+        {/* Scroll down hint — mobile only */}
+        {isMobile && (
+          <div className="flex flex-col items-center gap-1 mt-6" aria-hidden="true">
+            <span style={{ fontSize: '0.7rem', fontFamily: 'Satoshi, sans-serif', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Scroll
+            </span>
+            <ChevronDown size={16} style={{ color: 'rgba(255,255,255,0.35)', animation: 'bounce-chevron 1.5s ease-in-out infinite' }} />
+          </div>
+        )}
       </Container>
     </section>
   )
