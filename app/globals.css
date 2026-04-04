@@ -243,8 +243,6 @@ h1, h2, h3, h4, h5, h6 {
 .carousel-perspective {
   perspective: 1200px;
   perspective-origin: center center;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
 }
 .card-3d-inner {
   transform-style: preserve-3d;

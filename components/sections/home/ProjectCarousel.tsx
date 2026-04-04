@@ -52,7 +52,7 @@ function cardPositionTransform(diff: number): string {
   const tz  = -abs * 120
   const ry  = diff * -28
   const sc  = Math.max(0.55, 1 - abs * 0.14)
-  return `translateX(${tx}px) translateZ(${tz}px) rotateY(${ry}deg) scale(${sc})`
+  return `translate3d(${tx}px, 0px, ${tz}px) rotateY(${ry}deg) scale(${sc})`
 }
 
 function cardOpacity(diff: number): number {
@@ -170,10 +170,8 @@ export default function ProjectCarousel() {
                   transition:       'transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.55s ease',
                   cursor:           Math.abs(diff) <= 3 ? 'pointer' : 'default',
                   visibility:       visible ? 'visible' : 'hidden',
-                  willChange:       'transform, opacity',
-                  perspective:      '1000px',
-                  backfaceVisibility: 'hidden',
-                  WebkitBackfaceVisibility: 'hidden',
+                  willChange:  'transform, opacity',
+                  perspective: '1000px',
                 } as React.CSSProperties}
                 onClick={() => handleCardClick(i, diff)}
                 aria-label={project.name}
