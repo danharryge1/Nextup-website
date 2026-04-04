@@ -1,21 +1,29 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+
+// useLayoutEffect runs synchronously before the browser paints — safe on client only
+// useEffect is a no-op fallback for SSR (this component is loaded with ssr:false anyway)
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export function LoadingScreen() {
-  // Start invisible — only becomes visible once we confirm it should play
-  const [opacity, setOpacity] = useState(0);
-  const [mounted, setMounted] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [show, setShow]           = useState(true);  // Start blocking — hides website until we decide
+  const [videoReady, setVideoReady] = useState(false);
+  const [fading, setFading]       = useState(false);
+  const videoRef  = useRef<HTMLVideoElement>(null);
   const hasPlayed = useRef(false);
 
+  // Runs synchronously before the browser paints — removes overlay instantly for returning visitors
+  useIsomorphicLayoutEffect(() => {
+    if (window.innerWidth < 768 || sessionStorage.getItem('introPlayed')) {
+      setShow(false);
+    }
+  }, []);
+
   useEffect(() => {
-    // Skip on mobile — remove from DOM cleanly
-    if (window.innerWidth < 768) { setMounted(false); return; }
-    // Skip if already played this session — remove from DOM cleanly
-    if (sessionStorage.getItem('introPlayed')) { setMounted(false); return; }
+    if (!show) return;
 
     const vid = videoRef.current;
-    if (!vid) { setMounted(false); return; }
+    if (!vid) { setShow(false); return; }
 
     vid.muted = true;
     vid.defaultMuted = true;
@@ -25,37 +33,37 @@ export function LoadingScreen() {
       if (hasPlayed.current) return;
       hasPlayed.current = true;
       sessionStorage.setItem('introPlayed', '1');
-      setOpacity(0);
-      setTimeout(() => setMounted(false), 500);
+      setFading(true);
+      setTimeout(() => setShow(false), 500);
     };
 
     vid.onended = hideIntro;
-    vid.onerror = () => setMounted(false);
+    vid.onerror = () => setShow(false);
 
     vid.load();
     vid.addEventListener('canplay', () => {
-      setOpacity(1); // Only become visible when video is actually ready
-      vid.play().catch(() => setMounted(false));
+      setVideoReady(true);
+      vid.play().catch(() => setShow(false));
     }, { once: true });
 
     const timer = setTimeout(hideIntro, 5000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [show]);
 
-  if (!mounted) return null;
+  if (!show) return null;
 
   return (
     <div style={{
-      position: 'fixed',
-      inset: 0,
-      zIndex: 99999,
+      position:        'fixed',
+      inset:           0,
+      zIndex:          99999,
       backgroundColor: '#0A0A0F',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      opacity,
-      transition: 'opacity 0.5s ease',
-      pointerEvents: 'none',
+      display:         'flex',
+      alignItems:      'center',
+      justifyContent:  'center',
+      opacity:         fading ? 0 : 1,
+      transition:      'opacity 0.5s ease',
+      pointerEvents:   'none',
     }}>
       <video
         ref={videoRef}
@@ -63,10 +71,12 @@ export function LoadingScreen() {
         playsInline
         preload="auto"
         style={{
-          width: '100vw',
-          height: '100vh',
-          objectFit: 'cover',
+          width:           '100vw',
+          height:          '100vh',
+          objectFit:       'cover',
           backgroundColor: '#0A0A0F',
+          opacity:         videoReady ? 1 : 0,
+          transition:      'opacity 0.3s ease',
         }}
       >
         <source src="/videos/intro.mp4" type='video/mp4; codecs="avc1.42E01E"' />
