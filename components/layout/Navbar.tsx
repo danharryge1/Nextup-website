@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
@@ -11,13 +11,26 @@ import MobileMenu from './MobileMenu'
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-[var(--border)]"
-        style={{ background: 'rgba(10,10,15,0.92)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' } as React.CSSProperties}
+        className="fixed top-0 left-0 right-0 z-50 h-20"
+        style={{
+          background:          scrolled ? 'rgba(10,10,15,0.92)' : 'transparent',
+          backdropFilter:      scrolled ? 'blur(12px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
+          borderBottom:        scrolled ? '1px solid var(--border)' : 'none',
+          transition:          'all 0.3s ease',
+        } as React.CSSProperties}
       >
         <div className="container h-full flex items-center justify-between">
           {/* Logo */}

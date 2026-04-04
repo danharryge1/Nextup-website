@@ -31,9 +31,16 @@ export default function Hero() {
     vid.volume = 0
     vid.currentTime = 0
     vid.load()
-    vid.play().catch(() => {
-      vid.style.display = 'none'
-    })
+    const tryPlay = () => {
+      vid.play().catch(() => {
+        vid.style.opacity = '0'
+      })
+    }
+    if (vid.readyState >= 3) {
+      tryPlay()
+    } else {
+      vid.addEventListener('canplay', tryPlay, { once: true })
+    }
   }, [])
 
   useEffect(() => {
@@ -64,6 +71,7 @@ export default function Hero() {
           style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, filter: 'blur(1px)' }}
         >
           <source src="/videos/hero-bg.mp4" type="video/mp4" />
+          <source src="/videos/hero-bg.webm" type="video/webm" />
         </video>
         {/* Gradient overlay - fades video into the section below */}
         <div
