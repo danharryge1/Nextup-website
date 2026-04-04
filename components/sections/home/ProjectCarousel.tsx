@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Container from '@/components/ui/Container'
@@ -46,17 +47,15 @@ function displayDiff(index: number, active: number): number {
   return d
 }
 
-function cardPositionTransform(diff: number): string {
+function cardAnimate(diff: number) {
   const abs = Math.abs(diff)
-  const tx  = diff * 240
-  const tz  = -abs * 120
-  const ry  = diff * -28
-  const sc  = Math.max(0.55, 1 - abs * 0.14)
-  return `translate3d(${tx}px, 0px, ${tz}px) rotateY(${ry}deg) scale(${sc})`
-}
-
-function cardOpacity(diff: number): number {
-  return Math.max(0, 1 - Math.abs(diff) * 0.3)
+  return {
+    x:        diff * 240,
+    z:        -abs * 120,
+    rotateY:  diff * -28,
+    scale:    Math.max(0.55, 1 - abs * 0.14),
+    opacity:  Math.max(0, 1 - abs * 0.3),
+  }
 }
 
 export default function ProjectCarousel() {
@@ -156,23 +155,21 @@ export default function ProjectCarousel() {
             const isFlipped = flippedIndex === i
 
             return (
-              <div
+              <motion.div
                 key={project.name}
                 className="absolute top-0"
                 style={{
-                  left:             '50%',
-                  marginLeft:       -(CARD_W / 2),
-                  width:            CARD_W,
-                  height:           CARD_H,
-                  transform:        cardPositionTransform(diff),
-                  opacity:          cardOpacity(diff),
-                  zIndex:           10 - Math.abs(diff),
-                  transition:       'transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.55s ease',
-                  cursor:           Math.abs(diff) <= 3 ? 'pointer' : 'default',
-                  visibility:       visible ? 'visible' : 'hidden',
-                  willChange:  'transform, opacity',
-                  perspective: '1000px',
-                } as React.CSSProperties}
+                  left:         '50%',
+                  marginLeft:   -(CARD_W / 2),
+                  width:        CARD_W,
+                  height:       CARD_H,
+                  zIndex:       10 - Math.abs(diff),
+                  cursor:       Math.abs(diff) <= 3 ? 'pointer' : 'default',
+                  pointerEvents: Math.abs(diff) > 3 ? 'none' : 'auto',
+                  perspective:  '1000px',
+                }}
+                animate={cardAnimate(diff)}
+                transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
                 onClick={() => handleCardClick(i, diff)}
                 aria-label={project.name}
               >
@@ -381,7 +378,7 @@ export default function ProjectCarousel() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             )
           })}
         </div>
