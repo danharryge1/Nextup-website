@@ -20,7 +20,14 @@
       "Bash(echo ffprobe not available:*)",
       "Bash(mdls:*)",
       "Bash(LC_ALL=C find /Users/dangeorge/consultancy-website/app /Users/dangeorge/consultancy-website/components /Users/dangeorge/consultancy-website/lib -type f \\\\\\( -name \"*.ts\" -o -name \"*.tsx\" -o -name \"*.css\" \\\\\\))",
-      "Bash(xargs perl:*)"
+      "Bash(xargs perl:*)",
+      "Bash(ffmpeg -version)",
+      "Bash(ffprobe -v quiet -print_format json -show_streams hero-bg.mp4)",
+      "Bash(ffprobe -v quiet -print_format json -show_streams intro.mp4)",
+      "Bash(ffmpeg -i hero-bg.mp4)",
+      "Bash(ffmpeg -i intro.mp4)",
+      "Bash(/opt/homebrew/bin/ffmpeg -i /Users/dangeorge/consultancy-website/public/videos/hero-bg.mp4)",
+      "Bash(/opt/homebrew/bin/ffmpeg -i /Users/dangeorge/consultancy-website/public/videos/intro.mp4)"
     ]
   }
 }

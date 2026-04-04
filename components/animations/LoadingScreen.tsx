@@ -80,7 +80,7 @@ export function LoadingScreen() {
           backgroundColor: '#0A0A0F',
         }}
       >
-        <source src="/videos/intro.mp4" type="video/mp4" />
+        <source src="/videos/intro.mp4" type='video/mp4; codecs="avc1.42E01E"' />
       </video>
     </div>
   );
