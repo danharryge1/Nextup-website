@@ -160,18 +160,21 @@ export default function ProjectCarousel() {
                 key={project.name}
                 className="absolute top-0"
                 style={{
-                  left:        '50%',
-                  marginLeft:  -(CARD_W / 2),
-                  width:       CARD_W,
-                  height:      CARD_H,
-                  transform:   cardPositionTransform(diff),
-                  opacity:     cardOpacity(diff),
-                  zIndex:      10 - Math.abs(diff),
-                  transition:  'transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.55s ease',
-                  cursor:      Math.abs(diff) <= 3 ? 'pointer' : 'default',
-                  visibility:  visible ? 'visible' : 'hidden',
-                  perspective: '1000px',
-                }}
+                  left:             '50%',
+                  marginLeft:       -(CARD_W / 2),
+                  width:            CARD_W,
+                  height:           CARD_H,
+                  transform:        cardPositionTransform(diff),
+                  opacity:          cardOpacity(diff),
+                  zIndex:           10 - Math.abs(diff),
+                  transition:       'transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.55s ease',
+                  cursor:           Math.abs(diff) <= 3 ? 'pointer' : 'default',
+                  visibility:       visible ? 'visible' : 'hidden',
+                  willChange:       'transform, opacity',
+                  perspective:      '1000px',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden',
+                } as React.CSSProperties}
                 onClick={() => handleCardClick(i, diff)}
                 aria-label={project.name}
               >
