@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer'
 import PageTransition from '@/components/animations/PageTransition'
 import AuroraAnimation from '@/components/animations/AuroraAnimation'
 import { COMPANY_NAME } from '@/lib/constants'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 // ssr:false — component never appears in server HTML, so no hydration mismatch.
 // useLayoutEffect fires synchronously on client before first paint.
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
           <Footer />
         </div>
+        <SpeedInsights />
       </body>
     </html>
   )
