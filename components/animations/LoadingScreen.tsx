@@ -40,11 +40,19 @@ export function LoadingScreen() {
     vid.onended = hideIntro;
     vid.onerror = () => setShow(false);
 
-    vid.load();
+    // Attach listener BEFORE load() so we never miss a fast cache-hit canplay event
     vid.addEventListener('canplay', () => {
       setVideoReady(true);
       vid.play().catch(() => setShow(false));
     }, { once: true });
+
+    if (vid.readyState >= 3) {
+      // Already ready (browser cached) — fire manually instead of waiting for canplay
+      setVideoReady(true);
+      vid.play().catch(() => setShow(false));
+    } else {
+      vid.load();
+    }
 
     const timer = setTimeout(hideIntro, 5000);
     return () => clearTimeout(timer);

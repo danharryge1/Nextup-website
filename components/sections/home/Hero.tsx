@@ -29,8 +29,12 @@ export default function Hero() {
     vid.muted = true
     vid.defaultMuted = true
     vid.volume = 0
-    vid.currentTime = 0
-    vid.load()
+
+    // Don't call vid.load() — the element already has autoPlay + preload="auto",
+    // so the browser starts loading immediately. Calling load() would cancel that
+    // and restart, causing the inconsistent playback race condition.
+    if (!vid.paused) return  // Browser autoplay already running — leave it alone
+
     const tryPlay = () => {
       vid.play().catch(() => {
         vid.style.opacity = '0'
