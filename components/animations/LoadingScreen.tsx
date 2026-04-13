@@ -87,7 +87,7 @@ export function LoadingScreen() {
           transition:      'opacity 0.3s ease',
         }}
       >
-        <source src="/videos/intro.mp4" type='video/mp4; codecs="avc1.42E01E"' />
+        <source src="/videos/intro.mp4" type="video/mp4" />
       </video>
     </div>
   );

@@ -74,8 +74,7 @@ export default function Hero() {
           poster="/videos/poster.jpg"
           style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, filter: 'blur(1px)' }}
         >
-          <source src="/videos/hero-bg.mp4" type='video/mp4; codecs="avc1.42E01E"' />
-          <source src="/videos/hero-bg.webm" type="video/webm" />
+          <source src="/videos/hero-bg.mp4" type="video/mp4" />
         </video>
         {/* Gradient overlay - fades video into the section below */}
         <div
