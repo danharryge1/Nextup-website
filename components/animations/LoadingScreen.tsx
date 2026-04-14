@@ -2,7 +2,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 // useLayoutEffect runs synchronously before the browser paints — safe on client only
-// useEffect is a no-op fallback for SSR (this component is loaded with ssr:false anyway)
+// useEffect is the fallback for SSR (refs/sessionStorage aren't available server-side)
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export function LoadingScreen() {
@@ -16,6 +16,7 @@ export function LoadingScreen() {
   useIsomorphicLayoutEffect(() => {
     if (window.innerWidth < 768 || sessionStorage.getItem('introPlayed')) {
       setShow(false);
+      window.dispatchEvent(new Event('resize'));
     }
   }, []);
 
@@ -34,7 +35,10 @@ export function LoadingScreen() {
       hasPlayed.current = true;
       sessionStorage.setItem('introPlayed', '1');
       setFading(true);
-      setTimeout(() => setShow(false), 500);
+      setTimeout(() => {
+        setShow(false);
+        window.dispatchEvent(new Event('resize'));
+      }, 500);
     };
 
     vid.onended = hideIntro;

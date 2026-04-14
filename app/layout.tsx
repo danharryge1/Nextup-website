@@ -1,18 +1,11 @@
 import type { Metadata } from 'next'
-import dynamic from 'next/dynamic'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import PageTransition from '@/components/animations/PageTransition'
 import AuroraAnimation from '@/components/animations/AuroraAnimation'
+import LoadingScreen from '@/components/animations/LoadingScreen'
 import { COMPANY_NAME } from '@/lib/constants'
-
-// ssr:false — component never appears in server HTML, so no hydration mismatch.
-// useLayoutEffect fires synchronously on client before first paint.
-const LoadingScreen = dynamic(
-  () => import('@/components/animations/LoadingScreen'),
-  { ssr: false }
-)
 
 export const metadata: Metadata = {
   title: {
