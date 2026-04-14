@@ -40,23 +40,22 @@ export function LoadingScreen() {
     vid.onended = hideIntro;
     vid.onerror = () => setShow(false);
 
-    // Attach listener before any play attempt so we never miss a fast cache-hit
-    vid.addEventListener('canplay', () => {
+    // Aggressively attempt to play since Safari sometimes stalls autoPlay without direct API interaction on load
+    const playAttempt = () => {
       setVideoReady(true);
-      vid.play().catch(() => {
-        // play() rejected (e.g. Safari autoplay policy) — fade out gracefully
+      vid.play().catch((err) => {
+        console.warn('Video autoplay blocked or failed:', err);
         setFading(true);
         setTimeout(() => setShow(false), 500);
       });
-    }, { once: true });
+    };
 
-    if (vid.readyState >= 3) {
-      // Already ready (browser cached) — fire manually instead of waiting for canplay
-      setVideoReady(true);
-      vid.play().catch(() => {
-        setFading(true);
-        setTimeout(() => setShow(false), 500);
-      });
+    // Sometimes canplay fires, sometimes it doesn't if cached. Just calling play() often fixes it.
+    if (vid.readyState >= 2) {
+      playAttempt();
+    } else {
+      vid.addEventListener('canplay', playAttempt, { once: true });
+      vid.addEventListener('loadeddata', playAttempt, { once: true });
     }
     // Do NOT call vid.load() — preload="auto" + autoPlay handle loading.
     // Calling load() resets readyState on Safari and can break autoplay.
@@ -91,8 +90,7 @@ export function LoadingScreen() {
           height:          '100vh',
           objectFit:       'cover',
           backgroundColor: '#0A0A0F',
-          opacity:         videoReady ? 1 : 0,
-          transition:      'opacity 0.3s ease',
+          // removing opacity check to ensure Safari IntersectionObserver allows media to eagerly load and autoplay
         }}
       >
         <source src="/videos/intro.mp4" type="video/mp4" />
