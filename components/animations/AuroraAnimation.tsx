@@ -158,27 +158,22 @@ export default function AuroraAnimation() {
   return (
     <div
       className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      style={{
-        zIndex: 2,
-        filter: 'blur(38px)',
-        WebkitFilter: 'blur(38px)',
-        transform: 'translate3d(0,0,0)',
-        WebkitTransform: 'translate3d(0,0,0)',
-        willChange: 'transform',
-        backfaceVisibility: 'hidden',
-        WebkitBackfaceVisibility: 'hidden',
-      } as React.CSSProperties}
+      style={{ zIndex: 2 } as React.CSSProperties}
       aria-hidden="true"
     >
+      {/* Safari bug: CSS filter on a canvas *parent* renders the canvas blank.
+          Apply blur directly to the canvas element so Safari composites correctly. */}
       <canvas
         ref={canvasRef}
         style={{
           display: 'block',
           width: '100%',
           height: '100%',
-          transform: 'translateZ(0)',
-          WebkitTransform: 'translateZ(0)',
-          imageRendering: 'auto',
+          filter: 'blur(38px)',
+          WebkitFilter: 'blur(38px)',
+          transform: 'translate3d(0,0,0)',
+          WebkitTransform: 'translate3d(0,0,0)',
+          willChange: 'transform',
         } as React.CSSProperties}
       />
     </div>

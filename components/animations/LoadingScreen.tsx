@@ -40,19 +40,26 @@ export function LoadingScreen() {
     vid.onended = hideIntro;
     vid.onerror = () => setShow(false);
 
-    // Attach listener BEFORE load() so we never miss a fast cache-hit canplay event
+    // Attach listener before any play attempt so we never miss a fast cache-hit
     vid.addEventListener('canplay', () => {
       setVideoReady(true);
-      vid.play().catch(() => setShow(false));
+      vid.play().catch(() => {
+        // play() rejected (e.g. Safari autoplay policy) — fade out gracefully
+        setFading(true);
+        setTimeout(() => setShow(false), 500);
+      });
     }, { once: true });
 
     if (vid.readyState >= 3) {
       // Already ready (browser cached) — fire manually instead of waiting for canplay
       setVideoReady(true);
-      vid.play().catch(() => setShow(false));
-    } else {
-      vid.load();
+      vid.play().catch(() => {
+        setFading(true);
+        setTimeout(() => setShow(false), 500);
+      });
     }
+    // Do NOT call vid.load() — preload="auto" + autoPlay handle loading.
+    // Calling load() resets readyState on Safari and can break autoplay.
 
     const timer = setTimeout(hideIntro, 5000);
     return () => clearTimeout(timer);
@@ -75,6 +82,7 @@ export function LoadingScreen() {
     }}>
       <video
         ref={videoRef}
+        autoPlay
         muted
         playsInline
         preload="auto"
