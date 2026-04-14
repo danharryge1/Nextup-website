@@ -56,7 +56,7 @@ export default function Hero() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ minHeight: 'max(100vh, 700px)', background: 'transparent' }}
+      style={{ minHeight: 'max(100vh, 700px)', background: '#0A0A0F' }}
       aria-label="Hero"
     >
       {/* Video background with parallax */}
