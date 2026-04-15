@@ -12,7 +12,7 @@ import { HERO_HEADLINE, HERO_SUBHEADLINE, HERO_CTA, HERO_CTA_LINK, HERO_REASSURA
 export default function Hero() {
   const [hideChevron, setHideChevron] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoContainerRef = useRef<HTMLDivElement>(null)
   const { scrollY } = useScroll()
 
   useEffect(() => {
@@ -23,35 +23,36 @@ export default function Hero() {
   const subtitleY = useTransform(scrollY, [0, 700], [0, isMobile ? 0 : -56])
   const videoY    = useTransform(scrollY, [0, 700], [0, isMobile ? 0 : -350])
 
+  // Create video via raw DOM to bypass React hydration — the root cause of Safari autoplay failures
   useEffect(() => {
-    const vid = videoRef.current
-    if (!vid) return
+    const container = videoContainerRef.current
+    if (!container) return
+
+    const vid = document.createElement('video')
     vid.muted = true
     vid.defaultMuted = true
-    vid.volume = 0
+    vid.loop = true
+    vid.playsInline = true
+    vid.preload = 'auto'
     vid.controls = false
+    vid.volume = 0
+    vid.setAttribute('playsinline', '')
+    vid.setAttribute('webkit-playsinline', '')
 
-    // If already playing (browser managed to start it), leave it alone
-    if (!vid.paused && vid.currentTime > 0) return
+    Object.assign(vid.style, {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      opacity: '0.35',
+      filter: 'blur(1px)',
+    })
 
-    let started = false
+    vid.src = '/videos/hero-bg.mp4'
+    container.appendChild(vid)
+
     const tryPlay = () => {
-      if (started) return
-      if (!vid.paused && vid.currentTime > 0) return
-      started = true
-      vid.play().then(() => {
-        // Playing successfully
-      }).catch(() => {
-        started = false
-        // Retry once — Safari sometimes rejects the first attempt then allows the second
-        setTimeout(() => {
-          if (started || (!vid.paused && vid.currentTime > 0)) return
-          started = true
-          vid.play().catch(() => {
-            // Truly blocked — hide video silently
-            vid.style.opacity = '0'
-          })
-        }, 200)
+      vid.play().catch(() => {
+        // Autoplay blocked — poster image is already showing, video stays hidden
       })
     }
 
@@ -62,9 +63,15 @@ export default function Hero() {
       vid.addEventListener('loadeddata', tryPlay, { once: true })
     }
 
-    // Safety net: try play after 1s regardless (handles Safari not firing events for cached video)
+    // Safety net for Safari not firing events on cached video
     const fallback = setTimeout(tryPlay, 1000)
-    return () => clearTimeout(fallback)
+
+    return () => {
+      clearTimeout(fallback)
+      vid.pause()
+      vid.removeAttribute('src')
+      vid.remove()
+    }
   }, [])
 
   useEffect(() => {
@@ -79,22 +86,20 @@ export default function Hero() {
       style={{ minHeight: 'max(100vh, 700px)', background: '#0A0A0F' }}
       aria-label="Hero"
     >
-      {/* Video background with parallax */}
+      {/* Video background with parallax — poster always visible, video is progressive enhancement */}
       <motion.div
         className="absolute z-0"
-        style={{ top: '-5vh', left: 0, right: 0, bottom: 0, y: videoY }}
+        style={{
+          top: '-5vh', left: 0, right: 0, bottom: 0, y: videoY,
+          backgroundImage: 'url(/videos/hero-poster.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.35,
+          filter: 'blur(1px)',
+        }}
       >
-        <video
-          ref={videoRef}
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster="/videos/poster.jpg"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, filter: 'blur(1px)' }}
-        >
-          <source src="/videos/hero-bg.mp4" type="video/mp4" />
-        </video>
+        {/* Video injected here via DOM — ref container */}
+        <div ref={videoContainerRef} style={{ width: '100%', height: '100%' }} />
         {/* Gradient overlay - fades video into the section below */}
         <div
           className="absolute bottom-0 left-0 right-0 h-48"
