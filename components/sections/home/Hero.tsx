@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import Container from '@/components/ui/Container'
@@ -12,7 +12,7 @@ import { HERO_HEADLINE, HERO_SUBHEADLINE, HERO_CTA, HERO_CTA_LINK, HERO_REASSURA
 export default function Hero() {
   const [hideChevron, setHideChevron] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoElRef = useRef<HTMLVideoElement | null>(null)
   const { scrollY } = useScroll()
 
   useEffect(() => {
@@ -23,33 +23,54 @@ export default function Hero() {
   const subtitleY = useTransform(scrollY, [0, 700], [0, isMobile ? 0 : -56])
   const videoY    = useTransform(scrollY, [0, 700], [0, isMobile ? 0 : -350])
 
-  // Play hero video — coordinate with intro via loading-done event
-  useEffect(() => {
-    const video = videoRef.current
+  // Callback ref — sets muted immediately on mount (before Safari evaluates autoplay)
+  const videoRef = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return
+    videoElRef.current = video
 
-    const tryPlay = (v: HTMLVideoElement) => {
-      v.muted = true
-      v.setAttribute('muted', '')
-      if (v.paused) v.play().catch(() => {})
+    // Ensure muted in every way Safari might check
+    video.muted = true
+    video.defaultMuted = true
+    video.volume = 0
+    video.setAttribute('muted', '')
+
+    const tryPlay = () => {
+      if (!video.paused) return
+      video.muted = true
+      video.play().catch((err) => {
+        if (err.name === 'NotAllowedError') {
+          // Safari blocked — play on first user interaction
+          const onGesture = () => {
+            video.muted = true
+            video.play().catch(() => {})
+            cleanup()
+          }
+          const cleanup = () => {
+            document.removeEventListener('click', onGesture)
+            document.removeEventListener('touchstart', onGesture)
+            document.removeEventListener('scroll', onGesture)
+          }
+          document.addEventListener('click', onGesture, { once: true })
+          document.addEventListener('touchstart', onGesture, { once: true })
+          document.addEventListener('scroll', onGesture, { once: true, passive: true })
+        }
+      })
     }
 
-    tryPlay(video)
+    tryPlay()
+  }, [])
 
-    const onCanPlay = () => tryPlay(video)
-    video.addEventListener('canplay', onCanPlay, { once: true })
-
-    // When intro finishes, reset and replay the hero video
+  // Reset and replay hero video when intro finishes
+  useEffect(() => {
     const onDone = () => {
+      const video = videoElRef.current
+      if (!video) return
       video.currentTime = 0
-      tryPlay(video)
+      video.muted = true
+      video.play().catch(() => {})
     }
     window.addEventListener('loading-done', onDone, { once: true })
-
-    return () => {
-      video.removeEventListener('canplay', onCanPlay)
-      window.removeEventListener('loading-done', onDone)
-    }
+    return () => window.removeEventListener('loading-done', onDone)
   }, [])
 
   useEffect(() => {
@@ -81,7 +102,11 @@ export default function Hero() {
           onCanPlay={e => {
             const v = e.currentTarget
             v.muted = true
-            v.setAttribute('muted', '')
+            if (v.paused) v.play().catch(() => {})
+          }}
+          onLoadedData={e => {
+            const v = e.currentTarget
+            v.muted = true
             if (v.paused) v.play().catch(() => {})
           }}
           style={{

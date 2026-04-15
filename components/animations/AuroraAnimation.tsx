@@ -77,8 +77,10 @@ export default function AuroraAnimation() {
 
     function resize() {
       if (!canvas) return
-      canvas.width  = window.innerWidth
-      canvas.height = window.innerHeight
+      // 0.5x resolution avoids Safari's full-res canvas+blur drawing buffer bug
+      // while looking much better than 0.3x
+      canvas.width  = Math.round(window.innerWidth * 0.5)
+      canvas.height = Math.round(window.innerHeight * 0.5)
     }
     resize()
     window.addEventListener('resize', resize)
@@ -171,7 +173,7 @@ export default function AuroraAnimation() {
           display: 'block',
           width: '100%',
           height: '100%',
-          filter: 'blur(38px)',
+          filter: 'blur(20px)',
           transform: 'translate3d(0,0,0)',
           WebkitTransform: 'translate3d(0,0,0)',
         } as React.CSSProperties}

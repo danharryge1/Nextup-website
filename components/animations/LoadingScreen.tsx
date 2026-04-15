@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useLayoutEffect, useEffect, useCallback } from 'react'
+import { useState, useLayoutEffect, useEffect, useCallback, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 export default function LoadingScreen() {
   const [show, setShow] = useState(false)
   const [wasShown, setWasShown] = useState(false)
+  const gestureCleanup = useRef<(() => void) | null>(null)
 
   useLayoutEffect(() => {
     if (window.innerWidth < 768) return
@@ -30,17 +31,68 @@ export default function LoadingScreen() {
 
   useEffect(() => {
     if (wasShown && !show) {
-      // Fire immediately so hero video resets as loading screen begins its fade
+      if (gestureCleanup.current) {
+        gestureCleanup.current()
+        gestureCleanup.current = null
+      }
       window.dispatchEvent(new Event('loading-done'))
     }
   }, [wasShown, show])
 
-  // Callback ref: imperatively play the video the moment it mounts
   const handleVideoRef = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return
+
+    // Ensure muted in every way Safari might check
     video.muted = true
+    video.defaultMuted = true
+    video.volume = 0
     video.setAttribute('muted', '')
-    video.play().catch(() => setShow(false))
+
+    const attemptPlay = () => {
+      if (!video.paused) return // already playing
+      video.muted = true
+      video.play().catch((err) => {
+        if (err.name === 'NotAllowedError') {
+          // Safari blocked autoplay — wait for any user gesture
+          const onGesture = () => {
+            video.muted = true
+            video.play().catch(() => {
+              // Truly blocked — skip intro
+              setShow(false)
+            })
+            cleanup()
+          }
+          const cleanup = () => {
+            document.removeEventListener('click', onGesture)
+            document.removeEventListener('touchstart', onGesture)
+            document.removeEventListener('scroll', onGesture)
+            gestureCleanup.current = null
+          }
+          document.addEventListener('click', onGesture, { once: true })
+          document.addEventListener('touchstart', onGesture, { once: true })
+          document.addEventListener('scroll', onGesture, { once: true, passive: true })
+          gestureCleanup.current = cleanup
+
+          // Don't wait forever — skip after 5s if no gesture
+          setTimeout(() => {
+            if (video.paused) {
+              cleanup()
+              setShow(false)
+            }
+          }, 5000)
+        }
+        // AbortError = transient (e.g. data not loaded yet) — do NOT dismiss,
+        // the canplay/loadeddata handlers will retry
+      })
+    }
+
+    // Try immediately
+    attemptPlay()
+
+    // Retry after a short delay — Safari sometimes needs the element to settle
+    const retryTimer = setTimeout(attemptPlay, 200)
+
+    return () => clearTimeout(retryTimer)
   }, [])
 
   return (
@@ -63,8 +115,12 @@ export default function LoadingScreen() {
             onCanPlay={e => {
               const v = e.currentTarget
               v.muted = true
-              v.setAttribute('muted', '')
-              if (v.paused) v.play().catch(() => setShow(false))
+              if (v.paused) v.play().catch(() => {})
+            }}
+            onLoadedData={e => {
+              const v = e.currentTarget
+              v.muted = true
+              if (v.paused) v.play().catch(() => {})
             }}
             onEnded={() => setShow(false)}
             onError={() => setShow(false)}
