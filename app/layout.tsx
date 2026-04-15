@@ -29,6 +29,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap" />
         <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap" />
+        <script dangerouslySetInnerHTML={{
+          __html: `(function(){try{if(window.innerWidth>=768&&!sessionStorage.getItem('introPlayed')){var s=document.createElement('style');s.id='intro-blocker';s.textContent='body{visibility:hidden}';document.head.appendChild(s)}}catch(e){}})()`,
+        }} />
       </head>
       <body>
         <LoadingScreen />

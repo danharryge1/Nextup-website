@@ -12,7 +12,7 @@ import { HERO_HEADLINE, HERO_SUBHEADLINE, HERO_CTA, HERO_CTA_LINK, HERO_REASSURA
 export default function Hero() {
   const [hideChevron, setHideChevron] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const videoContainerRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const { scrollY } = useScroll()
 
   useEffect(() => {
@@ -23,54 +23,32 @@ export default function Hero() {
   const subtitleY = useTransform(scrollY, [0, 700], [0, isMobile ? 0 : -56])
   const videoY    = useTransform(scrollY, [0, 700], [0, isMobile ? 0 : -350])
 
-  // Create video via raw DOM to bypass React hydration — the root cause of Safari autoplay failures
+  // Play hero video — coordinate with intro via loading-done event
   useEffect(() => {
-    const container = videoContainerRef.current
-    if (!container) return
+    const video = videoRef.current
+    if (!video) return
 
-    const vid = document.createElement('video')
-    vid.muted = true
-    vid.defaultMuted = true
-    vid.loop = true
-    vid.playsInline = true
-    vid.preload = 'auto'
-    vid.controls = false
-    vid.volume = 0
-    vid.setAttribute('playsinline', '')
-    vid.setAttribute('webkit-playsinline', '')
-
-    Object.assign(vid.style, {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      opacity: '0.35',
-      filter: 'blur(1px)',
-    })
-
-    vid.src = '/videos/hero-bg.mp4'
-    container.appendChild(vid)
-
-    const tryPlay = () => {
-      vid.play().catch(() => {
-        // Autoplay blocked — poster image is already showing, video stays hidden
-      })
+    const tryPlay = (v: HTMLVideoElement) => {
+      v.muted = true
+      v.setAttribute('muted', '')
+      if (v.paused) v.play().catch(() => {})
     }
 
-    if (vid.readyState >= 3) {
-      tryPlay()
-    } else {
-      vid.addEventListener('canplay', tryPlay, { once: true })
-      vid.addEventListener('loadeddata', tryPlay, { once: true })
-    }
+    tryPlay(video)
 
-    // Safety net for Safari not firing events on cached video
-    const fallback = setTimeout(tryPlay, 1000)
+    const onCanPlay = () => tryPlay(video)
+    video.addEventListener('canplay', onCanPlay, { once: true })
+
+    // When intro finishes, reset and replay the hero video
+    const onDone = () => {
+      video.currentTime = 0
+      tryPlay(video)
+    }
+    window.addEventListener('loading-done', onDone, { once: true })
 
     return () => {
-      clearTimeout(fallback)
-      vid.pause()
-      vid.removeAttribute('src')
-      vid.remove()
+      video.removeEventListener('canplay', onCanPlay)
+      window.removeEventListener('loading-done', onDone)
     }
   }, [])
 
@@ -86,20 +64,36 @@ export default function Hero() {
       style={{ minHeight: 'max(100vh, 700px)', background: '#0A0A0F' }}
       aria-label="Hero"
     >
-      {/* Video background with parallax — poster always visible, video is progressive enhancement */}
+      {/* Video background with parallax */}
       <motion.div
         className="absolute z-0"
         style={{
           top: '-5vh', left: 0, right: 0, bottom: 0, y: videoY,
-          backgroundImage: 'url(/videos/hero-poster.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity: 0.35,
-          filter: 'blur(1px)',
         }}
       >
-        {/* Video injected here via DOM — ref container */}
-        <div ref={videoContainerRef} style={{ width: '100%', height: '100%' }} />
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          onCanPlay={e => {
+            const v = e.currentTarget
+            v.muted = true
+            v.setAttribute('muted', '')
+            if (v.paused) v.play().catch(() => {})
+          }}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: 0.35,
+            filter: 'blur(1px)',
+          }}
+        >
+          <source src="/videos/hero-bg.mp4" type="video/mp4" />
+        </video>
         {/* Gradient overlay - fades video into the section below */}
         <div
           className="absolute bottom-0 left-0 right-0 h-48"

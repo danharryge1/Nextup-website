@@ -1,116 +1,84 @@
-'use client';
-import { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
+'use client'
 
-const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+import { useState, useLayoutEffect, useEffect, useCallback } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 
-export function LoadingScreen() {
-  const [show, setShow]     = useState(true);
-  const [fading, setFading] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const hasEnded     = useRef(false);
+export default function LoadingScreen() {
+  const [show, setShow] = useState(false)
+  const [wasShown, setWasShown] = useState(false)
 
-  // Instantly remove overlay for returning visitors (before paint)
-  useIsomorphicLayoutEffect(() => {
-    if (window.innerWidth < 768 || sessionStorage.getItem('introPlayed')) {
-      setShow(false);
-      window.dispatchEvent(new Event('resize'));
+  useLayoutEffect(() => {
+    if (window.innerWidth < 768) return
+    try {
+      if (!sessionStorage.getItem('introPlayed')) {
+        setShow(true)
+      }
+    } catch {
+      // sessionStorage unavailable — skip intro
     }
-  }, []);
-
-  const hideIntro = useCallback(() => {
-    if (hasEnded.current) return;
-    hasEnded.current = true;
-    sessionStorage.setItem('introPlayed', '1');
-    setFading(true);
-    setTimeout(() => {
-      setShow(false);
-      window.dispatchEvent(new Event('resize'));
-    }, 500);
-  }, []);
+    const blocker = document.getElementById('intro-blocker')
+    if (blocker) blocker.remove()
+  }, [])
 
   useEffect(() => {
-    if (!show) return;
-    const container = containerRef.current;
-    if (!container) { setShow(false); return; }
+    if (!show) return
+    try { sessionStorage.setItem('introPlayed', '1') } catch { /* noop */ }
+    setWasShown(true)
+    const t = setTimeout(() => setShow(false), 10000)
+    return () => clearTimeout(t)
+  }, [show])
 
-    // Create the video element entirely via DOM — bypasses React hydration timing
-    // which is the root cause of Safari rejecting play() on page load
-    const vid = document.createElement('video');
-    vid.muted = true;
-    vid.defaultMuted = true;
-    vid.playsInline = true;
-    vid.preload = 'auto';
-    vid.controls = false;
-    vid.volume = 0;
-    // Safari needs this attribute set directly
-    vid.setAttribute('playsinline', '');
-    vid.setAttribute('webkit-playsinline', '');
-
-    Object.assign(vid.style, {
-      width: '100vw',
-      height: '100vh',
-      objectFit: 'cover',
-      backgroundColor: '#0A0A0F',
-    });
-
-    vid.src = '/videos/intro.mp4';
-    container.appendChild(vid);
-
-    vid.onended = hideIntro;
-    vid.onerror = () => { setShow(false); window.dispatchEvent(new Event('resize')); };
-
-    // Play as soon as we can — no race with React hydration since we made the element ourselves
-    const tryPlay = () => {
-      if (hasEnded.current) return;
-      vid.play().catch(() => {
-        // Safari rejected — skip intro cleanly (poster background is already showing)
-        hideIntro();
-      });
-    };
-
-    if (vid.readyState >= 2) {
-      tryPlay();
-    } else {
-      vid.addEventListener('canplay', tryPlay, { once: true });
-      vid.addEventListener('loadeddata', tryPlay, { once: true });
+  useEffect(() => {
+    if (wasShown && !show) {
+      // Fire immediately so hero video resets as loading screen begins its fade
+      window.dispatchEvent(new Event('loading-done'))
     }
+  }, [wasShown, show])
 
-    // Safety net — skip after 5s no matter what
-    const timer = setTimeout(hideIntro, 5000);
-
-    return () => {
-      clearTimeout(timer);
-      vid.onended = null;
-      vid.onerror = null;
-      vid.pause();
-      vid.removeAttribute('src');
-      vid.remove();
-    };
-  }, [show, hideIntro]);
-
-  if (!show) return null;
+  // Callback ref: imperatively play the video the moment it mounts
+  const handleVideoRef = useCallback((video: HTMLVideoElement | null) => {
+    if (!video) return
+    video.muted = true
+    video.setAttribute('muted', '')
+    video.play().catch(() => setShow(false))
+  }, [])
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        position:        'fixed',
-        inset:           0,
-        zIndex:          99999,
-        // Poster image as background — visible immediately, no flash even if video never plays
-        backgroundColor: '#0A0A0F',
-        backgroundImage: 'url(/videos/intro-poster.jpg)',
-        backgroundSize:  'cover',
-        backgroundPosition: 'center',
-        display:         'flex',
-        alignItems:      'center',
-        justifyContent:  'center',
-        opacity:         fading ? 0 : 1,
-        transition:      'opacity 0.5s ease',
-        pointerEvents:   'none',
-      }}
-    />
-  );
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          key="intro"
+          className="fixed inset-0 flex items-center justify-center"
+          style={{ zIndex: 99999, background: '#0A0A0F' }}
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.7, ease: 'easeInOut' }}
+        >
+          <video
+            ref={handleVideoRef}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            onCanPlay={e => {
+              const v = e.currentTarget
+              v.muted = true
+              v.setAttribute('muted', '')
+              if (v.paused) v.play().catch(() => setShow(false))
+            }}
+            onEnded={() => setShow(false)}
+            onError={() => setShow(false)}
+            style={{
+              width: '100vw',
+              height: '100vh',
+              objectFit: 'cover',
+              backgroundColor: '#0A0A0F',
+            }}
+          >
+            <source src="/videos/intro.mp4" type="video/mp4" />
+          </video>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 }
-
-export default LoadingScreen;

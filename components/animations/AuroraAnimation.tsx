@@ -14,11 +14,11 @@ interface Band {
 }
 
 const BANDS: Band[] = [
-  { r: 37,  g: 99,  b: 235, opacity: 0.55, yBase: 0.15, bandW: 150, speed: 0.08, phase1: 0.0,  phase2: 1.1 },
-  { r: 0,   g: 138, b: 160, opacity: 0.50, yBase: 0.25, bandW: 130, speed: 0.06, phase1: 2.1,  phase2: 0.4 },
-  { r: 0,   g: 171, b: 177, opacity: 0.42, yBase: 0.40, bandW: 110, speed: 0.07, phase1: 1.4,  phase2: 2.3 },
-  { r: 46,  g: 44,  b: 115, opacity: 0.52, yBase: 0.55, bandW: 140, speed: 0.05, phase1: 3.3,  phase2: 1.9 },
-  { r: 13,  g: 148, b: 136, opacity: 0.40, yBase: 0.35, bandW: 120, speed: 0.09, phase1: 0.9,  phase2: 3.1 },
+  { r: 37,  g: 99,  b: 235, opacity: 0.30, yBase: 0.15, bandW: 150, speed: 0.08, phase1: 0.0,  phase2: 1.1 },
+  { r: 0,   g: 138, b: 160, opacity: 0.25, yBase: 0.25, bandW: 130, speed: 0.06, phase1: 2.1,  phase2: 0.4 },
+  { r: 0,   g: 171, b: 177, opacity: 0.22, yBase: 0.40, bandW: 110, speed: 0.07, phase1: 1.4,  phase2: 2.3 },
+  { r: 46,  g: 44,  b: 115, opacity: 0.28, yBase: 0.55, bandW: 140, speed: 0.05, phase1: 3.3,  phase2: 1.9 },
+  { r: 13,  g: 148, b: 136, opacity: 0.20, yBase: 0.35, bandW: 120, speed: 0.09, phase1: 0.9,  phase2: 3.1 },
 ]
 
 function drawBand(
@@ -77,10 +77,8 @@ export default function AuroraAnimation() {
 
     function resize() {
       if (!canvas) return
-      // Lowering canvas native resolution acts as a natural blur and significantly improves performance
-      // while completely avoiding the Safari specific bug where `blur()` over a full-res canvas drops the drawing buffer.
-      canvas.width  = window.innerWidth * 0.3
-      canvas.height = window.innerHeight * 0.3
+      canvas.width  = window.innerWidth
+      canvas.height = window.innerHeight
     }
     resize()
     window.addEventListener('resize', resize)
@@ -122,8 +120,6 @@ export default function AuroraAnimation() {
     let rafId  = 0
     let lastMs = 0
 
-    // When the tab becomes visible again after being hidden, reset lastMs so the
-    // next frame doesn't get a huge dt that could cause a visible jump/stutter
     const onVisibility = () => {
       if (!document.hidden) lastMs = 0
     }
@@ -131,7 +127,7 @@ export default function AuroraAnimation() {
 
     function update(ts: number) {
       rafId = requestAnimationFrame(update)
-      const dt = lastMs === 0 ? 16 : Math.min(ts - lastMs, 100) // cap dt at 100ms
+      const dt = lastMs === 0 ? 16 : Math.min(ts - lastMs, 100)
       lastMs = ts
 
       velocity *= Math.exp(-dt / 500)
@@ -166,7 +162,7 @@ export default function AuroraAnimation() {
   return (
     <div
       className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 2 } as React.CSSProperties}
+      style={{ zIndex: 0 } as React.CSSProperties}
       aria-hidden="true"
     >
       <canvas
@@ -175,6 +171,7 @@ export default function AuroraAnimation() {
           display: 'block',
           width: '100%',
           height: '100%',
+          filter: 'blur(38px)',
           transform: 'translate3d(0,0,0)',
           WebkitTransform: 'translate3d(0,0,0)',
         } as React.CSSProperties}
