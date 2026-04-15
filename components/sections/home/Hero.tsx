@@ -30,21 +30,30 @@ export default function Hero() {
     vid.defaultMuted = true
     vid.volume = 0
 
-    // Don't call vid.load() — the element already has autoPlay + preload="auto",
-    // so the browser starts loading immediately. Calling load() would cancel that
-    // and restart, causing the inconsistent playback race condition.
-    if (!vid.paused) return  // Browser autoplay already running — leave it alone
-
+    let started = false
     const tryPlay = () => {
+      if (started || (!vid.paused && vid.currentTime > 0)) return
+      started = true
       vid.play().catch(() => {
+        // Autoplay blocked — hide silently, no play button
         vid.style.opacity = '0'
       })
     }
+
+    // If already playing (browser autoplay kicked in), do nothing
+    if (!vid.paused && vid.currentTime > 0) return
+
     if (vid.readyState >= 3) {
-      tryPlay()
+      // Small delay lets Safari's autoplay policy settle after hydration
+      setTimeout(tryPlay, 50)
     } else {
       vid.addEventListener('canplay', tryPlay, { once: true })
+      vid.addEventListener('loadeddata', tryPlay, { once: true })
     }
+
+    // Safety net: if nothing fires within 800ms, try anyway
+    const fallback = setTimeout(tryPlay, 800)
+    return () => clearTimeout(fallback)
   }, [])
 
   useEffect(() => {

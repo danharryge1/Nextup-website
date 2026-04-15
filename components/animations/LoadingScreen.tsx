@@ -44,25 +44,25 @@ export function LoadingScreen() {
     vid.onended = hideIntro;
     vid.onerror = () => setShow(false);
 
-    // Aggressively attempt to play since Safari sometimes stalls autoPlay without direct API interaction on load
+    let playAttempted = false;
     const playAttempt = () => {
+      if (playAttempted) return;
+      playAttempted = true;
       setVideoReady(true);
-      vid.play().catch((err) => {
-        console.warn('Video autoplay blocked or failed:', err);
-        setFading(true);
-        setTimeout(() => setShow(false), 500);
+      vid.play().catch(() => {
+        // Autoplay blocked — skip intro entirely (no fade delay that could flash)
+        setShow(false);
+        window.dispatchEvent(new Event('resize'));
       });
     };
 
-    // Sometimes canplay fires, sometimes it doesn't if cached. Just calling play() often fixes it.
     if (vid.readyState >= 2) {
-      playAttempt();
+      // Small delay lets Safari's autoplay policy settle after hydration
+      setTimeout(playAttempt, 50);
     } else {
       vid.addEventListener('canplay', playAttempt, { once: true });
       vid.addEventListener('loadeddata', playAttempt, { once: true });
     }
-    // Do NOT call vid.load() — preload="auto" + autoPlay handle loading.
-    // Calling load() resets readyState on Safari and can break autoplay.
 
     const timer = setTimeout(hideIntro, 5000);
     return () => clearTimeout(timer);

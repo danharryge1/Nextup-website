@@ -75,8 +75,8 @@ export default function AuroraAnimation() {
       if (!canvas) return
       // Lowering canvas native resolution acts as a natural blur and significantly improves performance
       // while completely avoiding the Safari specific bug where `blur()` over a full-res canvas drops the drawing buffer.
-      canvas.width  = window.innerWidth * 0.5
-      canvas.height = window.innerHeight * 0.5
+      canvas.width  = window.innerWidth * 0.3
+      canvas.height = window.innerHeight * 0.3
     }
     resize()
     window.addEventListener('resize', resize)
@@ -169,8 +169,6 @@ export default function AuroraAnimation() {
           display: 'block',
           width: '100%',
           height: '100%',
-          filter: 'blur(30px)',
-          WebkitFilter: 'blur(30px)',
           transform: 'translate3d(0,0,0)',
           WebkitTransform: 'translate3d(0,0,0)',
         } as React.CSSProperties}
