@@ -29,30 +29,41 @@ export default function Hero() {
     vid.muted = true
     vid.defaultMuted = true
     vid.volume = 0
+    vid.controls = false
+
+    // If already playing (browser managed to start it), leave it alone
+    if (!vid.paused && vid.currentTime > 0) return
 
     let started = false
     const tryPlay = () => {
-      if (started || (!vid.paused && vid.currentTime > 0)) return
+      if (started) return
+      if (!vid.paused && vid.currentTime > 0) return
       started = true
-      vid.play().catch(() => {
-        // Autoplay blocked — hide silently, no play button
-        vid.style.opacity = '0'
+      vid.play().then(() => {
+        // Playing successfully
+      }).catch(() => {
+        started = false
+        // Retry once — Safari sometimes rejects the first attempt then allows the second
+        setTimeout(() => {
+          if (started || (!vid.paused && vid.currentTime > 0)) return
+          started = true
+          vid.play().catch(() => {
+            // Truly blocked — hide video silently
+            vid.style.opacity = '0'
+          })
+        }, 200)
       })
     }
 
-    // If already playing (browser autoplay kicked in), do nothing
-    if (!vid.paused && vid.currentTime > 0) return
-
     if (vid.readyState >= 3) {
-      // Small delay lets Safari's autoplay policy settle after hydration
-      setTimeout(tryPlay, 50)
+      tryPlay()
     } else {
       vid.addEventListener('canplay', tryPlay, { once: true })
       vid.addEventListener('loadeddata', tryPlay, { once: true })
     }
 
-    // Safety net: if nothing fires within 800ms, try anyway
-    const fallback = setTimeout(tryPlay, 800)
+    // Safety net: try play after 1s regardless (handles Safari not firing events for cached video)
+    const fallback = setTimeout(tryPlay, 1000)
     return () => clearTimeout(fallback)
   }, [])
 
@@ -75,7 +86,6 @@ export default function Hero() {
       >
         <video
           ref={videoRef}
-          autoPlay
           muted
           loop
           playsInline

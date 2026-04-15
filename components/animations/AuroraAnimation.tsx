@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 
 interface Band {
   r: number; g: number; b: number
@@ -62,8 +63,11 @@ function drawBand(
 
 export default function AuroraAnimation() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const pathname = usePathname()
+  const isHome = pathname === '/'
 
   useEffect(() => {
+    if (isHome) return
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -155,7 +159,9 @@ export default function AuroraAnimation() {
       window.removeEventListener('scroll', onScroll)
       document.removeEventListener('visibilitychange', onVisibility)
     }
-  }, [])
+  }, [isHome])
+
+  if (isHome) return null
 
   return (
     <div
