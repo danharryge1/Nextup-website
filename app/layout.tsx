@@ -6,6 +6,7 @@ import PageTransition from '@/components/animations/PageTransition'
 import AuroraAnimation from '@/components/animations/AuroraAnimation'
 import LoadingScreen from '@/components/animations/LoadingScreen'
 import { COMPANY_NAME } from '@/lib/constants'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export const metadata: Metadata = {
   title: {
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
           <Footer />
         </div>
+        <SpeedInsights />
       </body>
     </html>
   )
